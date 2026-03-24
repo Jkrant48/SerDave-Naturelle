@@ -1,4 +1,4 @@
-//card for services on home page
+//card for services on home page (reusable)
 
 const ServiceCard = ({ tag, title, description, price }) => {
   return (

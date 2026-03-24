@@ -1,4 +1,4 @@
-//hero component
+//hero component (small changes needed)
 
 const Hero = () => {
   return (

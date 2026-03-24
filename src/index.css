@@ -1,0 +1,249 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Colors */
+  --text: #222222; /* main text (dark charcoal) */
+  --text-h: #111111; /* headings (almost black) */
+  --bg: #f7f7f7; /* page background */
+  --bg-light: #ffffff; /* cards / sections */
+  --bg-dark: #3c3c3c; /* dark bands (Our Products, Contact) */
+  --border: #e0e0e0; /* soft card borders */
+  --code-bg: #f3f3f3; /* light grey blocks / placeholders */
+
+  --accent: #000000; /* primary accent: black buttons/text */
+  --accent-bg: #111111; /* filled button background */
+  --accent-border: #111111; /* button borders / lines */
+  --social-bg: #f3f3f3; /* instagram + map placeholders */
+
+  --shadow:
+    rgba(0, 0, 0, 0.06) 0 10px 15px -3px, rgba(0, 0, 0, 0.03) 0 4px 6px -2px;
+
+  /* Typography – simple, modern sans-serif */
+  --sans:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --heading:
+    "Playfair Display", "Times New Roman", serif; /* for titles like “Our Services” */
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.15px;
+  color-scheme: light;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Responsive typography: scale down on smaller screens */
+
+@media (max-width: 1024px) {
+  :root {
+    font-size: 16px;
+  }
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--heading);
+}
+
+/* navbar */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg-light);
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar-logo img {
+  height: 100px;
+  width: auto;
+}
+
+.navbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-logo {
+  font-family: var(--heading);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-h);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.navbar-links a:hover {
+  color: var(--accent);
+}
+
+/* hero section */
+
+.hero {
+  position: relative;
+  height: 360px;
+  background: url("/hero-placeholder.jpg") center/cover no-repeat;
+  /* replace with your real image path or a gradient */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* dark overlay to match the mockup */
+.hero-overlay {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-inner {
+  max-width: 1100px;
+  width: 100%;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+.hero-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--heading);
+  font-size: 1.9rem;
+  letter-spacing: 0.5px;
+}
+
+.hero-subtitle {
+  margin: 0 0 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.98rem;
+  opacity: 0.9;
+}
+
+.hero-btn {
+  padding: 0.6rem 1.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-family: var(--sans);
+  cursor: pointer;
+}
+
+/* services card */
+.service-card {
+  position: relative;
+  background: var(--bg-light);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.service-tag {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: #eeeeee;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-family: var(--sans);
+}
+
+.service-card-body {
+  padding: 3.5rem 1rem 1.1rem;
+}
+
+.service-title {
+  margin: 0 0 0.2rem;
+  font-family: var(--heading);
+  font-size: 1rem;
+  color: var(--text-h);
+}
+
+.service-desc {
+  margin: 0.1rem 0 0.5rem;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.service-price {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: var(--sans);
+}
+
+/* services section */
+.services-section {
+  padding: 3rem 1rem;
+  background: var(--bg);
+}
+
+.services-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.services-heading {
+  margin: 0 0 1.75rem;
+  font-family: var(--heading);
+  font-size: 1.4rem;
+  color: var(--text-h);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+/* footer */
+
+.site-footer {
+  background: #000000;
+  color: #f5f5f5;
+  padding: 1.5rem 1rem;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-evenly;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+}
+
+.footer-inner p {
+  margin: 0.15rem 0;
+  color: #f5f5f5;
+}

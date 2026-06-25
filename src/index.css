@@ -59,9 +59,9 @@ h3 {
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 20;
-  background: var(--bg-light);
+  z-index: 2;
   border-bottom: 1px solid var(--border);
+  background: var(--bg-light);
 }
 
 .navbar-logo img {
@@ -102,12 +102,28 @@ h3 {
 }
 
 /* hero section */
+.container {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.img-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 .hero {
   position: relative;
+  z-index: 1;
   height: 360px;
-  background: url("/hero-placeholder.jpg") center/cover no-repeat;
-  /* replace with your real image path or a gradient */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -147,10 +163,9 @@ h3 {
 
 .hero-btn {
   padding: 0.6rem 1.8rem;
-  border-radius: 999px;
-  border: 1px solid var(--accent-border);
-  background: var(--accent-bg);
-  color: #ffffff;
+  border-radius: 13px;
+  background: var(--bg-light);
+  color: #000000;
   font-size: 0.9rem;
   font-family: var(--sans);
   cursor: pointer;
@@ -160,9 +175,18 @@ h3 {
 .card {
   position: relative;
   background: var(--bg-light);
-  border-radius: 4px;
+  border-radius: 10px;
   border: 1px solid var(--border);
   overflow: hidden;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
 }
 
 .card-tag {
@@ -203,20 +227,29 @@ h3 {
 
 /* services section */
 .services-section {
-  padding: 3rem 1rem;
+  margin: 6rem;
   background: var(--bg);
 }
 
 .services-inner {
   max-width: 1100px;
   margin: 0 auto;
+  padding: 3rem;
 }
 
 .services-heading {
   margin: 0 0 1.75rem;
   font-family: var(--heading);
-  font-size: 1.4rem;
+  font-size: 2rem;
   color: var(--text-h);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.services-heading img {
+  width: 70px;
+  height: auto;
 }
 
 .services-grid {
@@ -232,14 +265,88 @@ h3 {
   padding: 2.5rem 1rem;
 }
 
+.product-banner-inner {
+  margin: 0 auto;
+  padding: 3rem;
+}
+
 .product-banner h2 {
   text-align: center;
   margin-bottom: 40px;
+  font-family: var(--heading);
+  font-size: 2rem;
 }
 
 .product-banner-content {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
+}
+
+.p-card {
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.p-card-img {
+  width: 50px;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+}
+
+.p-card-body {
+  display: flex;
+  gap: 1rem;
+}
+
+/* work with us section */
+.workwithus-section {
+  margin: 4rem;
+}
+
+.workwithus-section img {
+  width: 400px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.323);
+}
+
+.workwithus-button {
+  margin-top: 2rem;
+  display: inline-block;
+  padding: 0.65rem 2rem;
+  border-radius: 20px;
+  border: none;
+  background: var(--accent-bg);
+  color: var(--bg-light);
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.workwithus-button:hover {
+  background: var(--bg-light);
+  color: var(--accent-bg);
+  border: 2px solid var(--accent-bg);
+}
+
+.workwithus-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.workwithus-heading {
+  margin: 0 0 1.75rem;
+  font-family: var(--heading);
+  font-size: 3rem;
+  color: var(--text-h);
 }
 
 /* Form */
@@ -258,7 +365,7 @@ h3 {
 .contact-heading {
   margin: 0 0 2rem;
   font-family: var(--heading);
-  font-size: 1.4rem;
+  font-size: 3rem;
   text-align: center;
   color: var(--bg-light);
 }
@@ -309,8 +416,8 @@ h3 {
 }
 
 .form-submit {
-  padding: 0.75rem 2rem;
-  border-radius: 999px;
+  padding: 0.75rem 4rem;
+  border-radius: 15px;
   border: none;
   background: var(--accent-bg);
   color: var(--bg-light);
@@ -323,13 +430,37 @@ h3 {
 }
 
 .form-submit:hover {
-  background: #000000;
+  background: var(--bg-light);
+  color: var(--accent-bg);
+}
+
+/* Social Media Section */
+.socialmedia-section {
+  padding: 5rem 1rem;
+  background: var(--bg-light);
+}
+
+.socialmedia-inner {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.socialmedia-inner h2 {
+  font-size: 2rem;
+  color: var(--text-h);
+  margin-bottom: 2rem;
+}
+
+.socialmedia-screenshot {
+  max-width: 20%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
 }
 
 /* Map  */
 .map-section {
   padding: 4rem 1rem;
-  background: var(--bg-light);
   margin: 2rem 0;
 }
 

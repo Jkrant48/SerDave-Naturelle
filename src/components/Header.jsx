@@ -5,9 +5,9 @@ function Header() {
   return (
     <header className="navbar">
       <div className="navbar-inner">
-        <div className="navbar-logo">
+        <a href="#home" className="navbar-logo" aria-label="Go to home page">
           <img src={logoNbg} alt="Serdave Naturelle Logo" />
-        </div>
+        </a>
         <nav className="navbar-links">
           <a href="#home">Home</a>
           <a href="#about">About Us</a>

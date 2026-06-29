@@ -1,5 +1,5 @@
 //homepage
-
+import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Hero from "../components/Hero";
@@ -54,6 +54,9 @@ const HomePage = () => {
               image={haircareImage}
             />
           </div>
+          <Link to="/services" className="services-btn">
+            Explore All Services
+          </Link>
         </div>
       </section>
       <section className="product-banner">

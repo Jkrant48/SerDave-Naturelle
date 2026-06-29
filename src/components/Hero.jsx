@@ -1,4 +1,5 @@
 //hero component (small changes needed)
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -9,7 +10,9 @@ const Hero = () => {
           <p className="hero-subtitle">
             Experience luxury services and top‑notch products.
           </p>
-          <button className="hero-btn">Book Now</button>
+          <Link to="/booking" className="hero-btn">
+            Book Now
+          </Link>
         </div>
       </div>
     </section>

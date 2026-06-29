@@ -95,10 +95,12 @@ h3 {
   font-family: var(--sans);
   font-size: 0.95rem;
   color: var(--text);
+  font-weight: 500;
 }
 
 .navbar-links a:hover {
   color: var(--accent);
+  text-decoration: underline;
 }
 
 /* hero section */
@@ -110,8 +112,6 @@ h3 {
 
 .img-container {
   position: absolute;
-  inset: 0;
-  z-index: 0;
 }
 
 .img-container img {
@@ -169,6 +169,13 @@ h3 {
   font-size: 0.9rem;
   font-family: var(--sans);
   cursor: pointer;
+  font-weight: 700;
+}
+
+.hero-btn:hover {
+  background: var(--accent-bg);
+  color: var(--bg-light);
+  border: 2px solid var(--bg-light);
 }
 
 /* services card */
@@ -235,6 +242,7 @@ h3 {
   max-width: 1100px;
   margin: 0 auto;
   padding: 3rem;
+  text-align: center;
 }
 
 .services-heading {
@@ -256,6 +264,25 @@ h3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem;
+}
+
+.services-btn {
+  padding: 0.6rem 1.8rem;
+  border-radius: 13px;
+  background: var(--accent-bg);
+  color: var(--bg-light);
+  font-size: 0.9rem;
+  font-family: var(--sans);
+  cursor: pointer;
+  font-weight: 700;
+  display: inline-block;
+  margin-top: 2rem;
+}
+
+.services-btn:hover {
+  background: var(--bg-light);
+  color: var(--accent-bg);
+  border: 2px solid var(--accent-bg);
 }
 
 /* Product-banner */

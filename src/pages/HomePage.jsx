@@ -6,7 +6,7 @@ import Hero from "../components/Hero";
 import Card from "../components/Card";
 import ProductCard from "../components/ProductCard";
 import Form from "../components/ContactForm";
-import Socialmedia from "../components/Socialmedia";
+
 import MapComponent from "../components/MapComponent";
 import heroimg from "../assets/hero.png";
 import serviceicon from "../assets/services-icon.png";
@@ -98,9 +98,38 @@ const HomePage = () => {
           <img src={hairdresser} alt="Hairdresserfreepik" />
         </div>
       </section>
+      <section className="contact-section">
+        <h2 className="contact-heading">Contact Us</h2>
+        <div className="contact-inner">
+          <Form />
+          <div className="social-icons">
+            <a
+              className="social-icon"
+              href="https://www.tiktok.com/@serdave_naturelle?_r=1&_t=ZS-97hoZZYrMvM"
+            >
+              <i className="fa-brands fa-tiktok"></i>
+            </a>
 
-      <Form />
-      <Socialmedia />
+            <a className="social-icon" href="https://wa.me/+233204700813">
+              <i className="fa-brands fa-whatsapp"></i>
+            </a>
+
+            <a
+              className="social-icon"
+              href="https://www.instagram.com/serdave_naturelle?igsh=MWp3MnNvY3UzdzVmeg=="
+            >
+              <i className="fa-brands fa-instagram"></i>
+            </a>
+            <a
+              href="https://www.facebook.com/share/1EUohUNV5E/?mibextid=wwXIfr"
+              className="social-icon"
+            >
+              <i className="fa-brands fa-facebook"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
       <MapComponent />
       <Footer />
     </>

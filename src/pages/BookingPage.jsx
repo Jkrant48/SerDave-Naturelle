@@ -9,13 +9,17 @@ const BookingPage = () => {
     <>
       <Header />
       <main className="page-shell">
-        <section className="page-hero">
-          <h1>Book an Appointment</h1>
-          <p>
-            Choose a date, pick a service, and reserve your preferred time with
-            us.
-          </p>
-        </section>
+        <div className="hero-banner">
+          <div className="hero-banner-inner">
+            <h1 className="B-hero-heading">Book an Appointment</h1>
+            <p>
+              Choose a date, pick a service, and reserve your preferred time
+              with us. <br /> A payment of GHC 50 is required to secure your
+              booking.
+            </p>
+          </div>
+        </div>
+        <section className="page-hero"></section>
         <BookingForm />
       </main>
       <Footer />

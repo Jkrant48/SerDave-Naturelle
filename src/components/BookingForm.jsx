@@ -46,6 +46,9 @@ const BookingForm = () => {
   const [selectedService, setSelectedService] = useState(services[0]);
   const [selectedDate, setSelectedDate] = useState(4);
   const [selectedTime, setSelectedTime] = useState(timeSlots[1]);
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [notes, setNotes] = useState("");
 
   const selectedStatus = useMemo(() => {
     return (
@@ -53,6 +56,24 @@ const BookingForm = () => {
       "available"
     );
   }, [selectedDate]);
+
+  const isDateAvailable = selectedStatus === "available";
+  const canSubmit =
+    isDateAvailable &&
+    customerName.trim().length > 0 &&
+    customerPhone.trim().length > 0;
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!canSubmit) {
+      return;
+    }
+
+    alert(
+      `Booking confirmed for ${customerName} on June ${selectedDate} at ${selectedTime} (${selectedService}).`,
+    );
+  };
 
   return (
     <section className="booking-section">
@@ -75,9 +96,11 @@ const BookingForm = () => {
               <button
                 key={day.date}
                 type="button"
-                className={`calendar-day ${day.status} ${selectedDate === day.date ? "selected" : ""}`}
+                className={`calendar-day ${day.status} ${
+                  selectedDate === day.date ? "selected" : ""
+                }`}
                 onClick={() => setSelectedDate(day.date)}
-                disabled={day.status === "booked"}
+                disabled={day.status !== "available"}
               >
                 <span>{day.date}</span>
               </button>
@@ -85,10 +108,10 @@ const BookingForm = () => {
           </div>
         </div>
 
-        <form className="booking-form">
+        <form className="booking-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label" htmlFor="service">
-              Select service
+              Pick a service
             </label>
             <select
               id="service"
@@ -108,19 +131,27 @@ const BookingForm = () => {
             <label className="form-label">Selected date</label>
             <div className="selected-summary">
               <strong>June {selectedDate}</strong>
-              <span className="status-pill">{selectedStatus}</span>
+              <span className={`status-pill ${selectedStatus}`}>
+                {selectedStatus}
+              </span>
             </div>
+            {!isDateAvailable && (
+              <p className="form-note">
+                Please choose a date marked as available before confirming.
+              </p>
+            )}
           </div>
 
           <div className="form-group">
             <label className="form-label" htmlFor="time">
-              Available time
+              Pick a time
             </label>
             <select
               id="time"
               className="form-input"
               value={selectedTime}
               onChange={(e) => setSelectedTime(e.target.value)}
+              disabled={!isDateAvailable}
             >
               {timeSlots.map((slot) => (
                 <option key={slot} value={slot}>
@@ -137,7 +168,10 @@ const BookingForm = () => {
             <input
               id="name"
               className="form-input"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
               placeholder="Enter your name"
+              required
             />
           </div>
 
@@ -148,7 +182,11 @@ const BookingForm = () => {
             <input
               id="phone"
               className="form-input"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
               placeholder="Enter your phone number"
+              required
+              type="tel"
             />
           </div>
 
@@ -160,11 +198,43 @@ const BookingForm = () => {
               id="notes"
               className="form-textarea"
               rows="4"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
               placeholder="Tell us about your preferred style or any special requests"
             />
           </div>
 
-          <button type="submit" className="form-submit">
+          <div className="booking-summary">
+            <h3>Appointment summary</h3>
+            <div className="booking-summary-item">
+              <span className="summary-label">Service</span>
+              <span>{selectedService}</span>
+            </div>
+            <div className="booking-summary-item">
+              <span className="summary-label">Date</span>
+              <span>June {selectedDate}</span>
+            </div>
+            <div className="booking-summary-item">
+              <span className="summary-label">Time</span>
+              <span>{selectedTime}</span>
+            </div>
+            <div className="booking-summary-item">
+              <span className="summary-label">Name</span>
+              <span>{customerName || "Not provided"}</span>
+            </div>
+            <div className="booking-summary-item">
+              <span className="summary-label">Phone</span>
+              <span>{customerPhone || "Not provided"}</span>
+            </div>
+            {notes && (
+              <div className="booking-summary-item">
+                <span className="summary-label">Notes</span>
+                <span>{notes}</span>
+              </div>
+            )}
+          </div>
+
+          <button type="submit" className="form-submit" disabled={!canSubmit}>
             Confirm booking
           </button>
         </form>

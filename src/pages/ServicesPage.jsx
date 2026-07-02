@@ -1,17 +1,36 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
+import haircareImage from "../assets/haircare.jpg";
 
 const ServicesPage = () => {
   return (
     <>
       <Header />
       <main className="page-shell">
-        <section className="page-hero">
-          <h1>Our Services</h1>
-          <p>
-            Explore our signature services for locs, braids, treatments, and
-            more.
-          </p>
+        <section className="s-page-hero">
+          <div className="hero-banner">
+            <div className="hero-banner-inner">
+              <h3>Welcome to our digital space!</h3>
+              <p>
+                Discover the perfect blend of traditional techniques and modern
+                innovation.
+              </p>
+            </div>
+          </div>
+          <div className="hero-content">
+            <div className="hero-content-text">
+              <h1>Our Services</h1>
+              <Link to="/Booking" className="book-btn">
+                Book an Appointment
+              </Link>
+            </div>
+            <img
+              src={haircareImage}
+              alt="Haircare"
+              className="hero-content-image"
+            />
+          </div>
         </section>
         <section className="page-card">
           <h2>Featured Services</h2>

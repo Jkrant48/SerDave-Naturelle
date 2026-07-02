@@ -1,0 +1,58 @@
+/* responsive-medium.css */
+
+:root {
+  font-size: 16px;
+}
+
+/* iPad / medium screens */
+@media (max-width: 1024px) {
+  .navbar-inner,
+  .contact-inner,
+  .workwithus-inner,
+  .services-inner,
+  .product-banner-inner,
+  .map-inner {
+    padding: 0 1rem;
+  }
+
+  .navbar-links {
+    gap: 1rem;
+  }
+
+  .services-grid,
+  .product-banner-content,
+  .workwithus-inner {
+    gap: 1rem;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .product-banner-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .workwithus-inner {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .contact-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-inner {
+    padding: 2rem 1rem;
+  }
+
+  .hero-title,
+  .workwithus-heading,
+  .contact-heading,
+  .product-banner h2,
+  .services-heading {
+    font-size: clamp(1.75rem, 2.2vw, 2.4rem);
+  }
+}

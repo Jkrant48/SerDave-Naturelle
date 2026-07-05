@@ -692,7 +692,8 @@ h3 {
     padding: 1rem;
   }
 }
- {
+
+.testimonial-card p {
   font-size: 1.1rem;
   color: var(--text);
   margin-top: 1rem;

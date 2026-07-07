@@ -1,0 +1,357 @@
+{
+  "salon": {
+    "name": "SerDave Naturelle",
+    "currency": {
+      "code": "GHS",
+      "symbol": "GH₵"
+    }
+  },
+
+  "booking": {
+    "depositRequired": false,
+    "depositPercentage": 0,
+    "allowWalkIns": true,
+    "allowOnlinePayment": false,
+    "bookingWindowDays": 60,
+    "maxBookingsPerDay": 8,
+    "cancellationHours": 24,
+    "slotInterval": 30
+  },
+
+  "businessHours": [
+    {
+      "day": "Monday",
+      "open": "08:00",
+      "close": "18:00",
+      "closed": false
+    },
+    {
+      "day": "Tuesday",
+      "open": "08:00",
+      "close": "18:00",
+      "closed": false
+    },
+    {
+      "day": "Wednesday",
+      "open": "08:00",
+      "close": "18:00",
+      "closed": false
+    },
+    {
+      "day": "Thursday",
+      "open": "08:00",
+      "close": "18:00",
+      "closed": false
+    },
+    {
+      "day": "Friday",
+      "open": "08:00",
+      "close": "18:00",
+      "closed": false
+    },
+    {
+      "day": "Saturday",
+      "open": "08:00",
+      "close": "18:00",
+      "closed": false
+    },
+    {
+      "day": "Sunday",
+      "open": "",
+      "close": "",
+      "closed": true
+    }
+  ],
+
+  "holidays": [],
+
+  "categories": [
+    {
+      "id": "braids",
+      "name": "Braids"
+    },
+    {
+      "id": "starter_locs",
+      "name": "Starter Locs"
+    },
+    {
+      "id": "retightening",
+      "name": "Locs Retightening"
+    },
+    {
+      "id": "treatment",
+      "name": "Hair Treatments"
+    },
+    {
+      "id": "add_on",
+      "name": "Additional Services"
+    }
+  ],
+
+  "bookingFields": {
+    "length": {
+      "label": "Hair Length",
+      "type": "select",
+      "options": [
+        "Above Neck",
+        "Neck",
+        "Shoulder",
+        "Bra Length",
+        "Below Bra Length",
+        "Waist",
+        "Hip",
+        "Butt Length"
+      ]
+    },
+
+    "size": {
+      "label": "Braid Size",
+      "type": "select",
+      "options": ["Large", "Medium", "Small/Medium", "Small"]
+    },
+
+    "hairDensity": {
+      "label": "Hair Density",
+      "type": "radio",
+      "options": ["Less Dense", "Dense"]
+    },
+
+    "starterOption": {
+      "label": "Choose Option",
+      "type": "radio"
+    }
+  },
+
+  "services": [
+    {
+      "id": "knotless",
+      "category": "braids",
+
+      "name": "Knotless Rasta Braids",
+
+      "description": "",
+
+      "image": "/images/services/knotless.jpg",
+
+      "duration": {
+        "min": 240,
+        "max": 420
+      },
+
+      "pricing": {
+        "type": "matrix",
+
+        "rows": [
+          {
+            "id": "shoulder",
+            "label": "Shoulder Length"
+          },
+          {
+            "id": "bra",
+            "label": "Bra Length"
+          },
+          {
+            "id": "butt",
+            "label": "Butt Length"
+          }
+        ],
+
+        "columns": [
+          {
+            "id": "large",
+            "label": "Large"
+          },
+          {
+            "id": "medium",
+            "label": "Medium"
+          },
+          {
+            "id": "small_medium",
+            "label": "Small/Medium"
+          },
+          {
+            "id": "small",
+            "label": "Small"
+          }
+        ],
+
+        "values": {}
+      },
+
+      "bookingFields": ["length", "size"]
+    },
+    {
+      "id": "knotless",
+      "category": "braids",
+
+      "name": "Knotless Twist Braids"
+    },
+
+    {
+      "id": "Cornrows",
+      "category": "braids",
+
+      "name": "Cornrow All back"
+    },
+    {
+      "id": "Cornrows",
+      "category": "braids",
+
+      "name": "Cornrow Rasta"
+    },
+
+    {
+      "id": "Cornrows",
+      "category": "braids",
+
+      "name": "Cornrow Rasta"
+    },
+    {
+      "id": "sisterlocks",
+
+      "category": "starter_locs",
+
+      "name": "Sisterlocks",
+
+      "description": "",
+
+      "image": "/images/services/sisterlocks.jpg",
+
+      "duration": {
+        "min": 300,
+        "max": 600
+      },
+
+      "pricing": {
+        "type": "options",
+
+        "options": [
+          {
+            "label": "Less Dense Hair",
+            "price": 300
+          },
+          {
+            "label": "Dense Hair",
+            "price": 350
+          }
+        ]
+      },
+
+      "bookingFields": ["hairDensity"]
+    },
+
+    {
+      "id": "retwist_small",
+
+      "category": "retightening",
+
+      "name": "Small Locs",
+
+      "description": "",
+
+      "image": "/images/services/retwist.jpg",
+
+      "duration": {
+        "min": 120,
+        "max": 180
+      },
+
+      "pricing": {
+        "type": "list",
+
+        "items": [
+          {
+            "label": "Neck to Shoulder",
+            "price": 200
+          },
+          {
+            "label": "Below Shoulder to Bra Length",
+            "price": 250
+          },
+          {
+            "label": "Below Bra Length",
+            "price": 300
+          }
+        ]
+      },
+
+      "bookingFields": ["length"]
+    },
+
+    {
+      "id": "wash",
+
+      "category": "add_on",
+
+      "name": "Hair Wash",
+
+      "image": "/images/services/wash.jpg",
+
+      "duration": {
+        "min": 20,
+        "max": 30
+      },
+
+      "pricing": {
+        "type": "fixed",
+        "price": 50
+      },
+
+      "bookingFields": []
+    },
+
+    {
+      "id": "detox",
+
+      "category": "add_on",
+
+      "name": "Locs Detox",
+
+      "image": "/images/services/detox.jpg",
+
+      "duration": {
+        "min": 45,
+        "max": 60
+      },
+
+      "pricing": {
+        "type": "fixed",
+        "price": 150
+      },
+
+      "bookingFields": []
+    },
+
+    {
+      "id": "protein_treatment",
+
+      "category": "treatment",
+
+      "name": "Protein Treatment",
+
+      "image": "/images/services/protein-treatment.jpg",
+
+      "duration": {
+        "min": 60,
+        "max": 90
+      },
+
+      "pricing": {
+        "type": "fixed",
+        "price": 120
+      },
+
+      "bookingFields": []
+    }
+  ],
+
+  "stylists": [],
+
+  "settings": {
+    "showServiceImages": true,
+    "showDuration": true,
+    "showStartingPrice": true,
+    "enableReviews": true,
+    "enableGallery": true
+  }
+}

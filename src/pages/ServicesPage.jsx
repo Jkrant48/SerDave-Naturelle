@@ -2,8 +2,13 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 import haircareImage from "../assets/haircare.jpg";
+import salonData from "../json/salon.json";
+import ServiceCard from "../components/ServiceCard";
 
 const ServicesPage = () => {
+  const categories = salonData.categories || [];
+  const services = salonData.services || [];
+
   return (
     <>
       <Header />
@@ -33,12 +38,22 @@ const ServicesPage = () => {
           </div>
         </section>
         <section className="page-card">
-          <h2>Featured Services</h2>
-          <ul>
-            <li>Loc maintenance and retwists</li>
-            <li>Stylish braids for every occasion</li>
-            <li>Hair treatment and nourishment</li>
-          </ul>
+          <div className="services-grid">
+            {categories.map((category) => {
+              const categoryServices = services.filter(
+                (service) => service.category === category.id,
+              );
+
+              return (
+                <div key={category.id} className="service-category-group">
+                  <h3>{category.name}</h3>
+                  {categoryServices.map((service) => (
+                    <ServiceCard key={service.id} service={service} />
+                  ))}
+                </div>
+              );
+            })}
+          </div>
         </section>
       </main>
       <Footer />

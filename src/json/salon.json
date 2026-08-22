@@ -19,331 +19,275 @@
   },
 
   "businessHours": [
-    {
-      "day": "Monday",
-      "open": "08:00",
-      "close": "18:00",
-      "closed": false
-    },
-    {
-      "day": "Tuesday",
-      "open": "08:00",
-      "close": "18:00",
-      "closed": false
-    },
-    {
-      "day": "Wednesday",
-      "open": "08:00",
-      "close": "18:00",
-      "closed": false
-    },
-    {
-      "day": "Thursday",
-      "open": "08:00",
-      "close": "18:00",
-      "closed": false
-    },
-    {
-      "day": "Friday",
-      "open": "08:00",
-      "close": "18:00",
-      "closed": false
-    },
-    {
-      "day": "Saturday",
-      "open": "08:00",
-      "close": "18:00",
-      "closed": false
-    },
-    {
-      "day": "Sunday",
-      "open": "",
-      "close": "",
-      "closed": true
-    }
+    { "day": "Monday", "open": "08:00", "close": "18:00", "closed": false },
+    { "day": "Tuesday", "open": "08:00", "close": "18:00", "closed": false },
+    { "day": "Wednesday", "open": "08:00", "close": "18:00", "closed": false },
+    { "day": "Thursday", "open": "08:00", "close": "18:00", "closed": false },
+    { "day": "Friday", "open": "08:00", "close": "18:00", "closed": false },
+    { "day": "Saturday", "open": "08:00", "close": "18:00", "closed": false },
+    { "day": "Sunday", "open": "", "close": "", "closed": true }
   ],
 
   "holidays": [],
 
   "categories": [
-    {
-      "id": "braids",
-      "name": "Braids"
-    },
-    {
-      "id": "starter_locs",
-      "name": "Starter Locs"
-    },
-    {
-      "id": "retightening",
-      "name": "Locs Retightening"
-    },
-    {
-      "id": "treatment",
-      "name": "Hair Treatments"
-    },
-    {
-      "id": "add_on",
-      "name": "Additional Services"
-    }
+    { "id": "braids", "name": "Braids" },
+    { "id": "starter_locs", "name": "Starter Locs" },
+    { "id": "retightening", "name": "Locs Retightening" },
+    { "id": "treatment", "name": "Hair Treatments" },
+    { "id": "add_on", "name": "Additional Services" }
   ],
 
   "bookingFields": {
     "length": {
       "label": "Hair Length",
       "type": "select",
-      "options": [
-        "Above Neck",
-        "Neck",
-        "Shoulder",
-        "Bra Length",
-        "Below Bra Length",
-        "Waist",
-        "Hip",
-        "Butt Length"
-      ]
+      "options": ["Above Neck", "Neck", "Shoulder", "Bra Length", "Below Bra Length", "Waist", "Hip", "Butt Length"]
     },
-
     "size": {
       "label": "Braid Size",
       "type": "select",
       "options": ["Large", "Medium", "Small/Medium", "Small"]
     },
-
     "hairDensity": {
       "label": "Hair Density",
       "type": "radio",
       "options": ["Less Dense", "Dense"]
     },
-
     "starterOption": {
       "label": "Choose Option",
       "type": "radio"
     }
   },
 
-  "services": [
-    {
-      "id": "knotless",
-      "category": "braids",
+  "services": {
 
-      "name": "Knotless Rasta Braids",
-
-      "description": "",
-
-      "image": "/images/services/knotless.jpg",
-
-      "duration": {
-        "min": 240,
-        "max": 420
-      },
-
-      "pricing": {
-        "type": "matrix",
-
-        "rows": [
-          {
-            "id": "shoulder",
-            "label": "Shoulder Length"
-          },
-          {
-            "id": "bra",
-            "label": "Bra Length"
-          },
-          {
-            "id": "butt",
-            "label": "Butt Length"
-          }
+    "braids": [
+      {
+        "id": "cornrow_all_back",
+        "name": "Cornrow (All Back)",
+        "pricingType": "matrix",
+        "sizes": ["Large", "Medium", "Small/Medium", "Small"],
+        "prices": [
+          { "length": "Shoulder Length", "large": 150, "medium": 200, "smallMedium": 260, "small": 300 },
+          { "length": "Bra Length", "large": 200, "medium": 250, "smallMedium": 300, "small": 350 },
+          { "length": "Butt Length", "large": 250, "medium": 300, "smallMedium": 320, "small": 400 }
         ],
-
-        "columns": [
-          {
-            "id": "large",
-            "label": "Large"
-          },
-          {
-            "id": "medium",
-            "label": "Medium"
-          },
-          {
-            "id": "small_medium",
-            "label": "Small/Medium"
-          },
-          {
-            "id": "small",
-            "label": "Small"
-          }
+        "bookingFields": ["length", "size"]
+      },
+      {
+        "id": "cornrow_all_back_own_hair",
+        "name": "Cornrow All Back (Own Hair)",
+        "pricingType": "fixed",
+        "price": 40,
+        "bookingFields": []
+      },
+      {
+        "id": "cornrow_rasta",
+        "name": "Cornrow (Rasta)",
+        "pricingType": "matrix",
+        "sizes": ["Large", "Medium", "Small/Medium", "Small"],
+        "prices": [
+          { "length": "Shoulder Length", "large": 200, "medium": 250, "smallMedium": 280, "small": 300 },
+          { "length": "Bra Length", "large": 250, "medium": 300, "smallMedium": 320, "small": 350 },
+          { "length": "Butt Length", "large": 300, "medium": 350, "smallMedium": 380, "small": 400 }
         ],
-
-        "values": {}
+        "bookingFields": ["length", "size"]
       },
+      {
+        "id": "cornrow_pony",
+        "name": "Cornrow Pony",
+        "pricingType": "matrix",
+        "sizes": ["Large", "Medium", "Small"],
+        "prices": [
+          { "length": "Shoulder Length", "large": 220, "medium": 250, "small": 350 },
+          { "length": "Bra Length", "large": 260, "medium": 300, "small": 400 },
+          { "length": "Butt Length", "large": 350, "medium": 380, "small": 500 }
+        ],
+        "bookingFields": ["length", "size"]
+      },
+      {
+        "id": "cornrow_pony_own_hair",
+        "name": "Cornrow Pony (Own Hair)",
+        "pricingType": "fixed",
+        "price": 50,
+        "bookingFields": []
+      },
+      {
+        "id": "knotless_twist",
+        "name": "Knotless (Twist) Braids",
+        "duration": { "min": 240, "max": 420 },
+        "pricingType": "matrix",
+        "sizes": ["Large", "Medium", "Small/Medium", "Small"],
+        "prices": [
+          { "length": "Shoulder Length", "large": 220, "medium": 300, "smallMedium": 320, "small": 350 },
+          { "length": "Bra Length", "large": 300, "medium": 350, "smallMedium": 400, "small": 500 },
+          { "length": "Butt Length", "large": 450, "medium": 480, "smallMedium": 520, "small": 600 }
+        ],
+        "bookingFields": ["length", "size"]
+      },
+      {
+        "id": "rasta_knotless",
+        "name": "Rasta (Knotless) Braids",
+        "duration": { "min": 240, "max": 420 },
+        "pricingType": "matrix",
+        "sizes": ["Large", "Medium", "Small/Medium", "Small"],
+        "prices": [
+          { "length": "Shoulder Length", "large": 200, "medium": 280, "smallMedium": 300, "small": 330 },
+          { "length": "Bra Length", "large": 290, "medium": 330, "smallMedium": 380, "small": 480 },
+          { "length": "Butt Length", "large": 400, "medium": 450, "smallMedium": 500, "small": 550 }
+        ],
+        "bookingFields": ["length", "size"]
+      },
+      {
+        "id": "spiral",
+        "name": "Spiral Braids",
+        "pricingType": "matrix",
+        "sizes": ["Large", "Medium", "Small/Medium", "Small"],
+        "prices": [
+          { "length": "Shoulder Length", "large": 300, "medium": 350, "smallMedium": 400, "small": 450 },
+          { "length": "Bra Length", "large": 400, "medium": 450, "smallMedium": 500, "small": 550 }
+        ],
+        "bookingFields": ["length", "size"]
+      },
+      {
+        "id": "boho",
+        "name": "Boho Braids",
+        "pricingType": "matrix",
+        "sizes": ["Large", "Medium", "Small/Medium", "Small"],
+        "prices": [
+          { "length": "Shoulder Length", "large": 320, "medium": 360, "smallMedium": 400, "small": 450 },
+          { "length": "Bra Length", "large": 380, "medium": 400, "smallMedium": 450, "small": 500 },
+          { "length": "Butt Length", "large": 420, "medium": 480, "smallMedium": 480, "small": 600 }
+        ],
+        "bookingFields": ["length", "size"]
+      },
+      {
+        "id": "faux_locs",
+        "name": "Faux Locs",
+        "pricingType": "matrix",
+        "sizes": ["Large", "Medium", "Small/Medium", "Small"],
+        "prices": [
+          { "length": "Shoulder Length", "large": 300, "medium": 350, "smallMedium": 400, "small": 450 },
+          { "length": "Bra Length", "large": 350, "medium": 390, "smallMedium": 450, "small": 500 },
+          { "length": "Butt Length", "large": 380, "medium": 420, "smallMedium": 490, "small": 550 }
+        ],
+        "bookingFields": ["length", "size"]
+      },
+      {
+        "id": "afro_boho",
+        "name": "Afro Boho",
+        "pricingType": "matrix",
+        "sizes": ["Large", "Medium", "Small/Medium", "Small"],
+        "prices": [
+          { "length": "Shoulder Length", "large": 400, "medium": 450, "smallMedium": 500, "small": 550 },
+          { "length": "Bra Length", "large": 450, "medium": 500, "smallMedium": 550, "small": 600 },
+          { "length": "Butt Length", "large": 500, "medium": 550, "smallMedium": 600, "small": 650 }
+        ],
+        "bookingFields": ["length", "size"]
+      }
+    ],
 
-      "bookingFields": ["length", "size"]
+    "locs": {
+
+      "starterLocs": [
+        {
+          "id": "sisterlocks",
+          "name": "Sisterlocks",
+          "method": "Interlocking",
+          "pricingType": "perInch",
+          "options": [
+            { "name": "Less Dense Hair", "price": 300 },
+            { "name": "Dense Hair", "price": 350 }
+          ],
+          "bookingFields": ["hairDensity"]
+        },
+        {
+          "id": "microlocs",
+          "name": "Microlocs",
+          "method": "Twist",
+          "pricingType": "perInch",
+          "options": [
+            { "name": "Option 1", "price": 250 },
+            { "name": "Option 2", "price": 300 }
+          ],
+          "bookingFields": ["starterOption"]
+        },
+        {
+          "id": "dreadlocks",
+          "name": "Dreadlocks",
+          "pricingType": "perInch",
+          "startingPrice": 250,
+          "bookingFields": []
+        },
+        {
+          "id": "instant_locs",
+          "name": "Instant Locs",
+          "pricingType": "perInch",
+          "price": 300,
+          "bookingFields": []
+        }
+      ],
+
+      "retightening": {
+        "smallLocs": [
+          { "length": "Neck to Shoulder", "startingPrice": 200 },
+          { "length": "Below Shoulder to Bra Length", "startingPrice": 250 },
+          { "length": "Below Bra Length", "startingPrice": 300 }
+        ],
+        "mediumLocs": [
+          { "length": "Neck to Shoulder", "startingPrice": 180 },
+          { "length": "Below Shoulder to Bra Length", "startingPrice": 200 },
+          { "length": "Below Bra Length", "startingPrice": 250 }
+        ],
+        "largeLocs": [
+          { "length": "Above Neck", "startingPrice": 80 },
+          { "length": "Neck to Shoulder", "startingPrice": 120 },
+          { "length": "Bra Length", "startingPrice": 150 },
+          { "length": "Below Bra Length", "startingPrice": 200 }
+        ],
+        "additionalServices": [
+          { "id": "washing", "name": "Washing", "startingPrice": 50 },
+          { "id": "locs_detox", "name": "Locs Detox", "startingPrice": 150 }
+        ],
+        "notes": [
+          "Price will be adjusted based on growth, length and density.",
+          "All prices are subject to review."
+        ],
+        "bookingFields": ["length"]
+      }
     },
-    {
-      "id": "knotless",
-      "category": "braids",
 
-      "name": "Knotless Twist Braids"
-    },
+    "treatments": [
+      {
+        "id": "protein_treatment",
+        "name": "Protein Treatment",
+        "pricingType": "fixed",
+        "price": 120,
+        "duration": { "min": 60, "max": 90 },
+        "bookingFields": []
+      }
+    ],
 
-    {
-      "id": "Cornrows",
-      "category": "braids",
-
-      "name": "Cornrow All back"
-    },
-    {
-      "id": "Cornrows",
-      "category": "braids",
-
-      "name": "Cornrow Rasta"
-    },
-
-    {
-      "id": "Cornrows",
-      "category": "braids",
-
-      "name": "Cornrow Rasta"
-    },
-    {
-      "id": "sisterlocks",
-
-      "category": "starter_locs",
-
-      "name": "Sisterlocks",
-
-      "description": "",
-
-      "image": "/images/services/sisterlocks.jpg",
-
-      "duration": {
-        "min": 300,
-        "max": 600
+    "addOns": [
+      {
+        "id": "wash",
+        "name": "Hair Wash",
+        "pricingType": "fixed",
+        "price": 50,
+        "duration": { "min": 20, "max": 30 },
+        "bookingFields": []
       },
-
-      "pricing": {
-        "type": "options",
-
-        "options": [
-          {
-            "label": "Less Dense Hair",
-            "price": 300
-          },
-          {
-            "label": "Dense Hair",
-            "price": 350
-          }
-        ]
-      },
-
-      "bookingFields": ["hairDensity"]
-    },
-
-    {
-      "id": "retwist_small",
-
-      "category": "retightening",
-
-      "name": "Small Locs",
-
-      "description": "",
-
-      "image": "/images/services/retwist.jpg",
-
-      "duration": {
-        "min": 120,
-        "max": 180
-      },
-
-      "pricing": {
-        "type": "list",
-
-        "items": [
-          {
-            "label": "Neck to Shoulder",
-            "price": 200
-          },
-          {
-            "label": "Below Shoulder to Bra Length",
-            "price": 250
-          },
-          {
-            "label": "Below Bra Length",
-            "price": 300
-          }
-        ]
-      },
-
-      "bookingFields": ["length"]
-    },
-
-    {
-      "id": "wash",
-
-      "category": "add_on",
-
-      "name": "Hair Wash",
-
-      "image": "/images/services/wash.jpg",
-
-      "duration": {
-        "min": 20,
-        "max": 30
-      },
-
-      "pricing": {
-        "type": "fixed",
-        "price": 50
-      },
-
-      "bookingFields": []
-    },
-
-    {
-      "id": "detox",
-
-      "category": "add_on",
-
-      "name": "Locs Detox",
-
-      "image": "/images/services/detox.jpg",
-
-      "duration": {
-        "min": 45,
-        "max": 60
-      },
-
-      "pricing": {
-        "type": "fixed",
-        "price": 150
-      },
-
-      "bookingFields": []
-    },
-
-    {
-      "id": "protein_treatment",
-
-      "category": "treatment",
-
-      "name": "Protein Treatment",
-
-      "image": "/images/services/protein-treatment.jpg",
-
-      "duration": {
-        "min": 60,
-        "max": 90
-      },
-
-      "pricing": {
-        "type": "fixed",
-        "price": 120
-      },
-
-      "bookingFields": []
-    }
-  ],
+      {
+        "id": "detox",
+        "name": "Locs Detox",
+        "pricingType": "fixed",
+        "price": 150,
+        "duration": { "min": 45, "max": 60 },
+        "bookingFields": []
+      }
+    ]
+  },
 
   "stylists": [],
 

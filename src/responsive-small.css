@@ -5,23 +5,30 @@
     font-size: 15px;
   }
 
+  h2 {
+    font-size: 2rem;
+  }
+
+  /* hero image */
+  .hero {
+    height: 300px;
+  }
+
+  .img-container {
+    width: 100%;
+    height: 100%;
+  }
+
   .navbar-logo img {
-    width: 70px;
+    width: 90px;
     height: auto;
+    padding: 0.5rem 0;
   }
 
-  .navbar-links {
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .hero,
-  .services-section,
-  .product-banner,
-  .workwithus-section,
-  .contact-section,
-  .map-section {
-    padding: 2rem 0.75rem;
+  .navbar-links.open {
+    right: 0.75rem;
+    left: 0.75rem;
+    width: auto;
   }
 
   .services-grid,
@@ -32,8 +39,27 @@
     gap: 1rem;
   }
 
+  .services-section {
+    margin: 2rem 1rem;
+  }
+
+  .services-heading img {
+    width: 60px;
+    height: auto;
+  }
+
+  .services-heading {
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
   .services-grid {
     grid-template-columns: 1fr;
+  }
+
+  .card-img {
+    width: 70%;
+    margin: 0 auto;
   }
 
   .social-icons {
@@ -55,5 +81,111 @@
   .workwithus-section img {
     width: 100%;
     max-width: 100%;
+  }
+
+  .page-shell {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .hero-banner {
+    height: auto;
+    padding: 1.75rem 1rem;
+    min-height: 150px;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .hero-content-text h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
+  }
+
+  .B-hero-heading {
+    font-size: 2.2rem;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-content-image {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .service-table-section {
+    padding: 1rem;
+  }
+
+  .service-pricing-table th,
+  .service-pricing-table td {
+    padding: 0.7rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .service-pricing-table td:last-child {
+    white-space: normal;
+  }
+
+  .booking-card {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+
+  .calendar-legend {
+    gap: 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .calendar-grid {
+    gap: 0.45rem;
+  }
+
+  .calendar-day {
+    padding: 0.75rem 0.25rem;
+  }
+
+  .booking-form .form-submit {
+    width: 100%;
+    align-self: stretch;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .selected-summary,
+  .booking-summary-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .about-grid,
+  .value-grid,
+  .team-grid,
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .about-card,
+  .team-card,
+  .testimonial-item,
+  .value-grid div {
+    padding: 1.25rem;
+  }
+
+  .about-card-image {
+    min-height: 260px;
+  }
+
+  .about-card-image img {
+    min-height: 260px;
+  }
+
+  .testimonial-item {
+    transform: none;
   }
 }

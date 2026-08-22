@@ -6,6 +6,10 @@
 
 /* iPad / medium screens */
 @media (max-width: 1024px) {
+  .navbar-logo img {
+    padding: 0.5rem 0;
+  }
+
   .navbar-inner,
   .contact-inner,
   .workwithus-inner,
@@ -19,10 +23,63 @@
     gap: 1rem;
   }
 
+  .navbar-inner {
+    position: relative;
+  }
+
+  .hamburger {
+    display: flex;
+    padding: 0.5rem;
+  }
+
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 0.75rem 1rem;
+    min-width: 180px;
+  }
+
+  .navbar-links.open {
+    display: flex;
+  }
+
+  /* Adjustments to hero */
+  .img-container {
+    width: 100%;
+    height: 100%;
+  }
+
   .services-grid,
   .product-banner-content,
   .workwithus-inner {
     gap: 1rem;
+  }
+
+  .about-grid {
+    flex-direction: column;
+  }
+
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .team-grid,
+  .testimonial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .team-card,
+  .testimonial-item,
+  .value-grid div,
+  .about-card {
+    text-align: left;
   }
 
   .services-grid {
@@ -46,6 +103,56 @@
 
   .hero-inner {
     padding: 2rem 1rem;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0 1.5rem;
+  }
+
+  .hero-content-image {
+    width: min(100%, 420px);
+  }
+
+  .page-shell {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .service-table-layout {
+    gap: 1.25rem;
+  }
+
+  .service-table-section {
+    padding: 1.25rem;
+  }
+
+  .hero-banner {
+    min-height: 140px;
+    padding: 1.25rem 1rem;
+  }
+
+  .service-pricing-table th,
+  .service-pricing-table td {
+    padding: 0.85rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .booking-card {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+
+  .selected-summary,
+  .booking-summary-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .booking-form .form-submit {
+    width: 100%;
+    align-self: stretch;
+    text-align: center;
   }
 
   .hero-title,

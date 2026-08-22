@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import salonData from "../json/salon.json";
 
 const services = [
   "Loc Maintenance",
@@ -7,61 +8,154 @@ const services = [
   "Custom Styling",
 ];
 
-const timeSlots = ["09:00", "10:30", "12:00", "14:00", "16:30"];
+const businessHours = salonData.businessHours || [];
+const slotIntervalMinutes = salonData.booking?.slotInterval || 30;
 
-const calendarDays = [
-  { date: 1, status: "available" },
-  { date: 2, status: "closed" },
-  { date: 3, status: "booked" },
-  { date: 4, status: "available" },
-  { date: 5, status: "available" },
-  { date: 6, status: "booked" },
-  { date: 7, status: "available" },
-  { date: 8, status: "closed" },
-  { date: 9, status: "available" },
-  { date: 10, status: "available" },
-  { date: 11, status: "booked" },
-  { date: 12, status: "available" },
-  { date: 13, status: "available" },
-  { date: 14, status: "available" },
-  { date: 15, status: "booked" },
-  { date: 16, status: "available" },
-  { date: 17, status: "closed" },
-  { date: 18, status: "available" },
-  { date: 19, status: "available" },
-  { date: 20, status: "booked" },
-  { date: 21, status: "available" },
-  { date: 22, status: "available" },
-  { date: 23, status: "available" },
-  { date: 24, status: "booked" },
-  { date: 25, status: "available" },
-  { date: 26, status: "closed" },
-  { date: 27, status: "available" },
-  { date: 28, status: "available" },
-  { date: 29, status: "booked" },
-  { date: 30, status: "available" },
-];
+const timeFromMinutes = (totalMinutes) => {
+  const hours = Math.floor(totalMinutes / 60)
+    .toString()
+    .padStart(2, "0");
+  const minutes = (totalMinutes % 60).toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
+
+const getOpenSlots = (dayName) => {
+  const schedule = businessHours.find((entry) => entry.day === dayName);
+
+  if (!schedule || schedule.closed || !schedule.open || !schedule.close) {
+    return [];
+  }
+
+  const [openHour, openMinute] = schedule.open.split(":").map(Number);
+  const [closeHour, closeMinute] = schedule.close.split(":").map(Number);
+  const openMinutes = openHour * 60 + openMinute;
+  const closeMinutes = closeHour * 60 + closeMinute;
+
+  const slots = [];
+  for (
+    let minuteValue = openMinutes;
+    minuteValue < closeMinutes;
+    minuteValue += slotIntervalMinutes
+  ) {
+    slots.push(timeFromMinutes(minuteValue));
+  }
+
+  return slots;
+};
+
+const formatDateKey = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const getCalendarDaysForMonth = (monthDate) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+
+  return Array.from({ length: totalDays }, (_, index) => {
+    const dateNumber = index + 1;
+    const date = new Date(year, month, dateNumber);
+    date.setHours(0, 0, 0, 0);
+
+    const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
+    const schedule = businessHours.find((entry) => entry.day === dayName);
+    const isPast = date < today;
+
+    return {
+      key: formatDateKey(date),
+      date: dateNumber,
+      fullDate: date,
+      monthLabel: date.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric",
+      }),
+      dayName,
+      status: isPast ? "past" : schedule?.closed ? "closed" : "available",
+    };
+  });
+};
 
 const BookingForm = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const [viewMonth, setViewMonth] = useState(
+    new Date(today.getFullYear(), today.getMonth(), 1),
+  );
   const [selectedService, setSelectedService] = useState(services[0]);
-  const [selectedDate, setSelectedDate] = useState(4);
-  const [selectedTime, setSelectedTime] = useState(timeSlots[1]);
+  const [selectedDateKey, setSelectedDateKey] = useState(() => {
+    const initialMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const availableDay = getCalendarDaysForMonth(initialMonth).find(
+      (day) => day.status === "available",
+    );
+
+    return availableDay ? availableDay.key : formatDateKey(today);
+  });
+  const [selectedTime, setSelectedTime] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [notes, setNotes] = useState("");
 
-  const selectedStatus = useMemo(() => {
-    return (
-      calendarDays.find((day) => day.date === selectedDate)?.status ||
-      "available"
-    );
-  }, [selectedDate]);
+  const visibleMonths = useMemo(
+    () => [new Date(viewMonth.getFullYear(), viewMonth.getMonth(), 1)],
+    [viewMonth],
+  );
 
+  const calendarDays = useMemo(
+    () =>
+      visibleMonths.flatMap((monthDate) => getCalendarDaysForMonth(monthDate)),
+    [visibleMonths],
+  );
+
+  const selectedDay = useMemo(
+    () => calendarDays.find((day) => day.key === selectedDateKey) || null,
+    [calendarDays, selectedDateKey],
+  );
+
+  const timeSlots = useMemo(
+    () => (selectedDay ? getOpenSlots(selectedDay.dayName) : []),
+    [selectedDay],
+  );
+
+  useEffect(() => {
+    if (!timeSlots.length) {
+      setSelectedTime("");
+      return;
+    }
+
+    if (!timeSlots.includes(selectedTime)) {
+      setSelectedTime(timeSlots[0]);
+    }
+  }, [timeSlots, selectedTime]);
+
+  const selectedStatus = selectedDay?.status || "available";
   const isDateAvailable = selectedStatus === "available";
+  const isPastDate = selectedStatus === "past";
   const canSubmit =
     isDateAvailable &&
     customerName.trim().length > 0 &&
-    customerPhone.trim().length > 0;
+    customerPhone.trim().length > 0 &&
+    !!selectedTime;
+
+  const goToPreviousMonth = () => {
+    setViewMonth(
+      (currentMonth) =>
+        new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1),
+    );
+  };
+
+  const goToNextMonth = () => {
+    setViewMonth(
+      (currentMonth) =>
+        new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1),
+    );
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -70,8 +164,14 @@ const BookingForm = () => {
       return;
     }
 
+    const dateLabel =
+      selectedDay?.fullDate?.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+      }) || "selected date";
+
     alert(
-      `Booking confirmed for ${customerName} on June ${selectedDate} at ${selectedTime} (${selectedService}).`,
+      `Booking confirmed for ${customerName} on ${dateLabel} at ${selectedTime} (${selectedService}).`,
     );
   };
 
@@ -91,20 +191,61 @@ const BookingForm = () => {
             </span>
           </div>
 
-          <div className="calendar-grid">
-            {calendarDays.map((day) => (
-              <button
-                key={day.date}
-                type="button"
-                className={`calendar-day ${day.status} ${
-                  selectedDate === day.date ? "selected" : ""
-                }`}
-                onClick={() => setSelectedDate(day.date)}
-                disabled={day.status !== "available"}
-              >
-                <span>{day.date}</span>
-              </button>
-            ))}
+          <div className="calendar-header">
+            <button
+              type="button"
+              className="calendar-nav-button"
+              onClick={goToPreviousMonth}
+              aria-label="Previous month"
+            >
+              ←
+            </button>
+
+            <div className="calendar-months-grid">
+              {visibleMonths.map((monthDate) => (
+                <div
+                  key={`${monthDate.getFullYear()}-${monthDate.getMonth()}`}
+                  className="calendar-month-panel"
+                >
+                  <h4 className="calendar-month-label">
+                    {monthDate.toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </h4>
+
+                  <div className="calendar-grid">
+                    {getCalendarDaysForMonth(monthDate).map((day) => (
+                      <button
+                        key={day.key}
+                        type="button"
+                        className={`calendar-day ${day.status} ${
+                          selectedDateKey === day.key ? "selected" : ""
+                        }`}
+                        onClick={() => {
+                          if (day.status === "available") {
+                            setSelectedDateKey(day.key);
+                          }
+                        }}
+                        disabled={day.status !== "available"}
+                        aria-label={`${day.dayName} ${day.date}`}
+                      >
+                        <span>{day.date}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className="calendar-nav-button"
+              onClick={goToNextMonth}
+              aria-label="Next month"
+            >
+              →
+            </button>
           </div>
         </div>
 
@@ -130,14 +271,23 @@ const BookingForm = () => {
           <div className="form-group">
             <label className="form-label">Selected date</label>
             <div className="selected-summary">
-              <strong>June {selectedDate}</strong>
+              <strong>
+                {selectedDay?.fullDate?.toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                }) || "Not selected"}
+              </strong>
               <span className={`status-pill ${selectedStatus}`}>
-                {selectedStatus}
+                {selectedStatus === "available" ? "Open" : "Closed"}
               </span>
             </div>
             {!isDateAvailable && (
               <p className="form-note">
-                Please choose a date marked as available before confirming.
+                {isPastDate
+                  ? "This date has already passed. Please choose a future available date."
+                  : selectedDay?.dayName
+                    ? `${selectedDay.dayName} is closed based on the salon schedule.`
+                    : "Please choose a date marked as available before confirming."}
               </p>
             )}
           </div>
@@ -151,13 +301,17 @@ const BookingForm = () => {
               className="form-input"
               value={selectedTime}
               onChange={(e) => setSelectedTime(e.target.value)}
-              disabled={!isDateAvailable}
+              disabled={!isDateAvailable || timeSlots.length === 0}
             >
-              {timeSlots.map((slot) => (
-                <option key={slot} value={slot}>
-                  {slot}
-                </option>
-              ))}
+              {timeSlots.length ? (
+                timeSlots.map((slot) => (
+                  <option key={slot} value={slot}>
+                    {slot}
+                  </option>
+                ))
+              ) : (
+                <option value="">Closed</option>
+              )}
             </select>
           </div>
 
@@ -212,11 +366,16 @@ const BookingForm = () => {
             </div>
             <div className="booking-summary-item">
               <span className="summary-label">Date</span>
-              <span>June {selectedDate}</span>
+              <span>
+                {selectedDay?.fullDate?.toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                }) || "Not selected"}
+              </span>
             </div>
             <div className="booking-summary-item">
               <span className="summary-label">Time</span>
-              <span>{selectedTime}</span>
+              <span>{selectedTime || "Not selected"}</span>
             </div>
             <div className="booking-summary-item">
               <span className="summary-label">Name</span>

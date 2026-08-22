@@ -1060,6 +1060,50 @@ h3 {
   background: #888;
 }
 
+.calendar-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.calendar-nav-button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-light);
+  color: var(--text-h);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calendar-nav-button:hover {
+  background: var(--bg);
+  border-color: var(--accent);
+}
+
+.calendar-months-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  flex: 1;
+}
+
+.calendar-month-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.calendar-month-label {
+  margin: 0;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -1083,6 +1127,7 @@ h3 {
   border-color: var(--accent);
 }
 
+.calendar-day.past,
 .calendar-day.booked,
 .calendar-day.closed {
   opacity: 0.35;

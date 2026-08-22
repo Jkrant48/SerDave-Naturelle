@@ -19,7 +19,7 @@
   },
 
   "businessHours": [
-    { "day": "Monday", "open": "08:00", "close": "18:00", "closed": false },
+    { "day": "Monday", "open": "", "close": "", "closed": true },
     { "day": "Tuesday", "open": "08:00", "close": "18:00", "closed": false },
     { "day": "Wednesday", "open": "08:00", "close": "18:00", "closed": false },
     { "day": "Thursday", "open": "08:00", "close": "18:00", "closed": false },
@@ -42,7 +42,16 @@
     "length": {
       "label": "Hair Length",
       "type": "select",
-      "options": ["Above Neck", "Neck", "Shoulder", "Bra Length", "Below Bra Length", "Waist", "Hip", "Butt Length"]
+      "options": [
+        "Above Neck",
+        "Neck",
+        "Shoulder",
+        "Bra Length",
+        "Below Bra Length",
+        "Waist",
+        "Hip",
+        "Butt Length"
+      ]
     },
     "size": {
       "label": "Braid Size",
@@ -61,7 +70,6 @@
   },
 
   "services": {
-
     "braids": [
       {
         "id": "cornrow_all_back",
@@ -69,9 +77,27 @@
         "pricingType": "matrix",
         "sizes": ["Large", "Medium", "Small/Medium", "Small"],
         "prices": [
-          { "length": "Shoulder Length", "large": 150, "medium": 200, "smallMedium": 260, "small": 300 },
-          { "length": "Bra Length", "large": 200, "medium": 250, "smallMedium": 300, "small": 350 },
-          { "length": "Butt Length", "large": 250, "medium": 300, "smallMedium": 320, "small": 400 }
+          {
+            "length": "Shoulder Length",
+            "large": 150,
+            "medium": 200,
+            "smallMedium": 260,
+            "small": 300
+          },
+          {
+            "length": "Bra Length",
+            "large": 200,
+            "medium": 250,
+            "smallMedium": 300,
+            "small": 350
+          },
+          {
+            "length": "Butt Length",
+            "large": 250,
+            "medium": 300,
+            "smallMedium": 320,
+            "small": 400
+          }
         ],
         "bookingFields": ["length", "size"]
       },
@@ -88,9 +114,27 @@
         "pricingType": "matrix",
         "sizes": ["Large", "Medium", "Small/Medium", "Small"],
         "prices": [
-          { "length": "Shoulder Length", "large": 200, "medium": 250, "smallMedium": 280, "small": 300 },
-          { "length": "Bra Length", "large": 250, "medium": 300, "smallMedium": 320, "small": 350 },
-          { "length": "Butt Length", "large": 300, "medium": 350, "smallMedium": 380, "small": 400 }
+          {
+            "length": "Shoulder Length",
+            "large": 200,
+            "medium": 250,
+            "smallMedium": 280,
+            "small": 300
+          },
+          {
+            "length": "Bra Length",
+            "large": 250,
+            "medium": 300,
+            "smallMedium": 320,
+            "small": 350
+          },
+          {
+            "length": "Butt Length",
+            "large": 300,
+            "medium": 350,
+            "smallMedium": 380,
+            "small": 400
+          }
         ],
         "bookingFields": ["length", "size"]
       },
@@ -100,7 +144,12 @@
         "pricingType": "matrix",
         "sizes": ["Large", "Medium", "Small"],
         "prices": [
-          { "length": "Shoulder Length", "large": 220, "medium": 250, "small": 350 },
+          {
+            "length": "Shoulder Length",
+            "large": 220,
+            "medium": 250,
+            "small": 350
+          },
           { "length": "Bra Length", "large": 260, "medium": 300, "small": 400 },
           { "length": "Butt Length", "large": 350, "medium": 380, "small": 500 }
         ],
@@ -120,9 +169,27 @@
         "pricingType": "matrix",
         "sizes": ["Large", "Medium", "Small/Medium", "Small"],
         "prices": [
-          { "length": "Shoulder Length", "large": 220, "medium": 300, "smallMedium": 320, "small": 350 },
-          { "length": "Bra Length", "large": 300, "medium": 350, "smallMedium": 400, "small": 500 },
-          { "length": "Butt Length", "large": 450, "medium": 480, "smallMedium": 520, "small": 600 }
+          {
+            "length": "Shoulder Length",
+            "large": 220,
+            "medium": 300,
+            "smallMedium": 320,
+            "small": 350
+          },
+          {
+            "length": "Bra Length",
+            "large": 300,
+            "medium": 350,
+            "smallMedium": 400,
+            "small": 500
+          },
+          {
+            "length": "Butt Length",
+            "large": 450,
+            "medium": 480,
+            "smallMedium": 520,
+            "small": 600
+          }
         ],
         "bookingFields": ["length", "size"]
       },
@@ -133,9 +200,27 @@
         "pricingType": "matrix",
         "sizes": ["Large", "Medium", "Small/Medium", "Small"],
         "prices": [
-          { "length": "Shoulder Length", "large": 200, "medium": 280, "smallMedium": 300, "small": 330 },
-          { "length": "Bra Length", "large": 290, "medium": 330, "smallMedium": 380, "small": 480 },
-          { "length": "Butt Length", "large": 400, "medium": 450, "smallMedium": 500, "small": 550 }
+          {
+            "length": "Shoulder Length",
+            "large": 200,
+            "medium": 280,
+            "smallMedium": 300,
+            "small": 330
+          },
+          {
+            "length": "Bra Length",
+            "large": 290,
+            "medium": 330,
+            "smallMedium": 380,
+            "small": 480
+          },
+          {
+            "length": "Butt Length",
+            "large": 400,
+            "medium": 450,
+            "smallMedium": 500,
+            "small": 550
+          }
         ],
         "bookingFields": ["length", "size"]
       },
@@ -145,8 +230,20 @@
         "pricingType": "matrix",
         "sizes": ["Large", "Medium", "Small/Medium", "Small"],
         "prices": [
-          { "length": "Shoulder Length", "large": 300, "medium": 350, "smallMedium": 400, "small": 450 },
-          { "length": "Bra Length", "large": 400, "medium": 450, "smallMedium": 500, "small": 550 }
+          {
+            "length": "Shoulder Length",
+            "large": 300,
+            "medium": 350,
+            "smallMedium": 400,
+            "small": 450
+          },
+          {
+            "length": "Bra Length",
+            "large": 400,
+            "medium": 450,
+            "smallMedium": 500,
+            "small": 550
+          }
         ],
         "bookingFields": ["length", "size"]
       },
@@ -156,9 +253,27 @@
         "pricingType": "matrix",
         "sizes": ["Large", "Medium", "Small/Medium", "Small"],
         "prices": [
-          { "length": "Shoulder Length", "large": 320, "medium": 360, "smallMedium": 400, "small": 450 },
-          { "length": "Bra Length", "large": 380, "medium": 400, "smallMedium": 450, "small": 500 },
-          { "length": "Butt Length", "large": 420, "medium": 480, "smallMedium": 480, "small": 600 }
+          {
+            "length": "Shoulder Length",
+            "large": 320,
+            "medium": 360,
+            "smallMedium": 400,
+            "small": 450
+          },
+          {
+            "length": "Bra Length",
+            "large": 380,
+            "medium": 400,
+            "smallMedium": 450,
+            "small": 500
+          },
+          {
+            "length": "Butt Length",
+            "large": 420,
+            "medium": 480,
+            "smallMedium": 480,
+            "small": 600
+          }
         ],
         "bookingFields": ["length", "size"]
       },
@@ -168,9 +283,27 @@
         "pricingType": "matrix",
         "sizes": ["Large", "Medium", "Small/Medium", "Small"],
         "prices": [
-          { "length": "Shoulder Length", "large": 300, "medium": 350, "smallMedium": 400, "small": 450 },
-          { "length": "Bra Length", "large": 350, "medium": 390, "smallMedium": 450, "small": 500 },
-          { "length": "Butt Length", "large": 380, "medium": 420, "smallMedium": 490, "small": 550 }
+          {
+            "length": "Shoulder Length",
+            "large": 300,
+            "medium": 350,
+            "smallMedium": 400,
+            "small": 450
+          },
+          {
+            "length": "Bra Length",
+            "large": 350,
+            "medium": 390,
+            "smallMedium": 450,
+            "small": 500
+          },
+          {
+            "length": "Butt Length",
+            "large": 380,
+            "medium": 420,
+            "smallMedium": 490,
+            "small": 550
+          }
         ],
         "bookingFields": ["length", "size"]
       },
@@ -180,16 +313,33 @@
         "pricingType": "matrix",
         "sizes": ["Large", "Medium", "Small/Medium", "Small"],
         "prices": [
-          { "length": "Shoulder Length", "large": 400, "medium": 450, "smallMedium": 500, "small": 550 },
-          { "length": "Bra Length", "large": 450, "medium": 500, "smallMedium": 550, "small": 600 },
-          { "length": "Butt Length", "large": 500, "medium": 550, "smallMedium": 600, "small": 650 }
+          {
+            "length": "Shoulder Length",
+            "large": 400,
+            "medium": 450,
+            "smallMedium": 500,
+            "small": 550
+          },
+          {
+            "length": "Bra Length",
+            "large": 450,
+            "medium": 500,
+            "smallMedium": 550,
+            "small": 600
+          },
+          {
+            "length": "Butt Length",
+            "large": 500,
+            "medium": 550,
+            "smallMedium": 600,
+            "small": 650
+          }
         ],
         "bookingFields": ["length", "size"]
       }
     ],
 
     "locs": {
-
       "starterLocs": [
         {
           "id": "sisterlocks",

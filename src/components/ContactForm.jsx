@@ -1,6 +1,34 @@
+import { useState } from "react";
+
 const ContactForm = () => {
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          message: formData.get("message"),
+        }),
+      });
+      const result = await response.json();
+      setIsError(!response.ok);
+      setStatusMessage(result.message || "Could not submit your message.");
+    } catch {
+      setIsError(true);
+      setStatusMessage("Could not reach the contact service.");
+    }
+  };
+
   return (
-    <form className="contact-form">
+    <form className="contact-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="name" className="form-label">
           Name
@@ -46,6 +74,11 @@ const ContactForm = () => {
       <button type="submit" className="form-submit">
         Send Message
       </button>
+      {statusMessage && (
+        <p className="form-note" role={isError ? "alert" : "status"}>
+          {statusMessage}
+        </p>
+      )}
     </form>
   );
 };

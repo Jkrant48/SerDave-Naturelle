@@ -6,27 +6,25 @@
 
 :root {
   /* Colors */
-  --text: #222222; /* main text (dark charcoal) */
-  --text-h: #111111; /* headings (almost black) */
-  --bg: #f7f7f7; /* page background */
-  --bg-light: #ffffff; /* cards / sections */
-  --bg-dark: #3c3c3c; /* dark bands (Our Products, Contact) */
-  --border: #e0e0e0; /* soft card borders */
-  --code-bg: #f3f3f3; /* light grey blocks / placeholders */
+  --text: #222222;
+  --text-h: #111111;
+  --bg: #f7f7f7;
+  --bg-light: #ffffff;
+  --bg-dark: #3c3c3c;
+  --border: #e0e0e0;
+  --code-bg: #f3f3f3;
 
-  --accent: #000000; /* primary accent: black buttons/text */
-  --accent-bg: #111111; /* filled button background */
-  --accent-border: #111111; /* button borders / lines */
-  --social-bg: #f3f3f3; /* instagram + map placeholders */
+  --accent: #000000;
+  --accent-bg: #111111;
+  --accent-border: #111111;
+  --social-bg: #f3f3f3;
 
   --shadow:
     rgba(0, 0, 0, 0.06) 0 10px 15px -3px, rgba(0, 0, 0, 0.03) 0 4px 6px -2px;
 
-  /* Typography – simple, modern sans-serif */
   --sans:
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --heading:
-    "Playfair Display", "Times New Roman", serif; /* for titles like “Our Services” */
+  --heading: "Playfair Display", "Times New Roman", serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   font: 18px/145% var(--sans);
@@ -40,18 +38,50 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Responsive typography: scale down on smaller screens */
+html {
+  scroll-behavior: smooth;
+}
 
-@media (max-width: 1024px) {
-  :root {
-    font-size: 16px;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  transition: all 0.2s ease;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
 }
 
 h1,
 h2,
 h3 {
   font-family: var(--heading);
+}
+
+@media (max-width: 1024px) {
+  :root {
+    font-size: 16px;
+  }
 }
 
 /* navbar */
@@ -108,7 +138,6 @@ h3 {
 }
 
 .navbar-links a {
-  text-decoration: none;
   font-family: var(--sans);
   font-size: 0.95rem;
   color: var(--text);
@@ -117,7 +146,7 @@ h3 {
 
 .navbar-links a:hover {
   color: var(--accent);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 /* hero section */
@@ -193,6 +222,51 @@ h3 {
   background: var(--accent-bg);
   color: var(--bg-light);
   border: 2px solid var(--bg-light);
+}
+
+.hero-btn,
+.services-btn,
+.workwithus-button,
+.book-btn,
+.contact-form .form-submit,
+.booking-form .form-submit {
+  display: inline-block;
+  border-radius: 15px;
+  border: none;
+  font-family: var(--sans);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hero-btn,
+.services-btn,
+.workwithus-button,
+.book-btn {
+  border: 2px solid transparent;
+}
+
+.services-btn,
+.workwithus-button,
+.book-btn,
+.contact-form .form-submit,
+.booking-form .form-submit {
+  background: var(--accent-bg);
+  color: var(--bg-light);
+}
+
+.services-btn:hover,
+.workwithus-button:hover,
+.book-btn:hover,
+.contact-form .form-submit:hover,
+.booking-form .form-submit:hover:not(:disabled) {
+  background: var(--bg-light);
+  color: var(--accent-bg);
+  border-color: var(--accent-bg);
 }
 
 /* services card */
@@ -285,21 +359,8 @@ h3 {
 
 .services-btn {
   padding: 0.6rem 1.8rem;
-  border-radius: 13px;
-  background: var(--accent-bg);
-  color: var(--bg-light);
   font-size: 0.9rem;
-  font-family: var(--sans);
-  cursor: pointer;
-  font-weight: 700;
-  display: inline-block;
   margin-top: 2rem;
-}
-
-.services-btn:hover {
-  background: var(--bg-light);
-  color: var(--accent-bg);
-  border: 2px solid var(--accent-bg);
 }
 
 /* Product-banner */
@@ -358,22 +419,10 @@ h3 {
 
 .workwithus-button {
   margin-top: 2rem;
-  display: inline-block;
   padding: 0.65rem 2rem;
   border-radius: 20px;
-  border: none;
-  background: var(--accent-bg);
-  color: var(--bg-light);
-  font-family: var(--sans);
   font-size: 0.95rem;
   font-weight: 600;
-  cursor: pointer;
-}
-
-.workwithus-button:hover {
-  background: var(--bg-light);
-  color: var(--accent-bg);
-  border: 2px solid var(--accent-bg);
 }
 
 .workwithus-inner {
@@ -453,58 +502,93 @@ h3 {
   background: #f5f5f5;
 }
 
-.contact-form .form-group {
+.contact-form .form-group,
+.booking-form .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-.contact-form .form-label {
+.contact-form .form-label,
+.booking-form .form-label {
   font-family: var(--sans);
   font-size: 0.9rem;
-  color: var(--bg-light);
   font-weight: 500;
+}
+
+.contact-form .form-label {
+  color: var(--bg-light);
+}
+
+.booking-form .form-label {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.contact-form .form-input,
+.contact-form .form-textarea,
+.booking-form .form-input,
+.booking-form .form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
 }
 
 .contact-form .form-input,
 .contact-form .form-textarea {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.1);
   color: var(--bg-light);
-  font-family: var(--sans);
-  font-size: 0.95rem;
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
-  transition: border-color 0.2s ease;
+}
+
+.booking-form .form-input,
+.booking-form .form-textarea {
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  background: #ffffff;
+  color: var(--text);
+}
+
+.contact-form .form-input:focus,
+.contact-form .form-textarea:focus,
+.booking-form .form-input:focus,
+.booking-form .form-textarea:focus {
+  outline: none;
 }
 
 .contact-form .form-input:focus,
 .contact-form .form-textarea:focus {
-  outline: none;
   border-color: rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.15);
 }
 
+.booking-form .form-input:focus,
+.booking-form .form-textarea:focus {
+  border-color: var(--accent-bg);
+  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.06);
+}
+
 .contact-form .form-input::placeholder,
-.contact-form .form-textarea::placeholder {
+.contact-form .form-textarea::placeholder,
+.booking-form .form-input::placeholder,
+.booking-form .form-textarea::placeholder {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.booking-form .form-input::placeholder,
+.booking-form .form-textarea::placeholder {
+  color: #999;
 }
 
 .contact-form .form-submit {
   padding: 0.75rem 4rem;
-  border-radius: 15px;
-  border: none;
-  background: var(--accent-bg);
-  color: var(--bg-light);
-  font-family: var(--sans);
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
   align-self: flex-start;
-  transition: background 0.2s ease;
 }
 
 .contact-form .form-submit:hover {
@@ -1146,59 +1230,13 @@ h3 {
 }
 
 .booking-form .form-group {
-  display: flex;
-  flex-direction: column;
   gap: 0.8rem;
-}
-
-.booking-form .form-label {
-  font-family: var(--sans);
-  font-size: 0.95rem;
-  color: var(--text-h);
-  font-weight: 600;
-}
-
-.booking-form .form-input,
-.booking-form .form-textarea {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(17, 17, 17, 0.12);
-  background: #ffffff;
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 0.95rem;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.booking-form .form-input:focus,
-.booking-form .form-textarea:focus {
-  outline: none;
-  border-color: var(--accent-bg);
-  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.06);
-}
-
-.booking-form .form-input::placeholder,
-.booking-form .form-textarea::placeholder {
-  color: #999;
 }
 
 .booking-form .form-submit {
   padding: 0.9rem 4rem;
-  border-radius: 15px;
-  border: none;
-  background: var(--accent-bg);
-  color: var(--bg-light);
-  font-family: var(--sans);
   font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
   align-self: flex-start;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
 }
 
 .booking-form .form-submit:hover:not(:disabled) {

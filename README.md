@@ -1,16 +1,28 @@
-# React + Vite
+# SerDave Naturelle
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React and Vite frontend with an Express API and PostgreSQL storage for appointments and contact messages.
 
-Currently, two official plugins are available:
+## Backend setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Install dependencies with `npm install`.
+2. Set `DB_URL` in `.env` to your PostgreSQL connection URL.
+3. Start the API with `npm run server` and the frontend with `npm run dev` in separate terminals.
 
-## React Compiler
+The API uses the existing `public.services`, `public.category`, `public.appointments`, and `public.messages` tables. It does not create or alter database tables.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The Vite development server forwards `/api` requests to `http://localhost:3000`. For a production deployment, configure the web server or hosting platform to route `/api` to the Node server.
 
-## Expanding the ESLint configuration
+## API
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `GET /api/health` checks the API and its PostgreSQL connection.
+- `GET /api/services` returns active services with their database categories, descriptions, prices, deposits, and durations.
+- `POST /api/bookings` accepts `customerName`, `customerEmail`, `customerPhone`, `serviceId`, `bookingDate` (`YYYY-MM-DD`), and `bookingTime` (`HH:MM`). Price and deposit are read from the selected existing service.
+- `POST /api/contact` accepts `name`, `email`, and `message` and stores them in the existing `public.messages` table.
+
+Routes map HTTP paths and methods to controllers. Controllers validate input and coordinate database operations. The shared PostgreSQL pool is configured in `server/config/database.js`; middleware handles common request and error behavior.
+
+## Frontend
+
+- `npm run dev` starts Vite.
+- `npm run build` creates the production frontend bundle.
+- `npm run lint` runs ESLint across the project.

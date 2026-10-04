@@ -33,7 +33,7 @@ const HomePage = () => {
           </div>
           <div className="services-grid">
             <Card
-              tag="New"
+              tag="Premium"
               title="Locs"
               description="Fresh locs, retwist, and maintenance services to keep your hair looking its best."
               price="GHC 150"
@@ -47,7 +47,7 @@ const HomePage = () => {
               image={braidsImage}
             />
             <Card
-              tag="Best Seller"
+              tag="Popular"
               title="Hair treatments"
               description="Pamper your hair with our expert hair treatment services."
               price="GHC 40"

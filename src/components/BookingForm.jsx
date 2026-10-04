@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import salonData from "../json/salon.json";
 
-const services = [
-  "Loc Maintenance",
-  "Braids",
-  "Hair Treatment",
-  "Custom Styling",
-];
-
 const businessHours = salonData.businessHours || [];
 const slotIntervalMinutes = salonData.booking?.slotInterval || 30;
+const formatCurrency = (value) =>
+  new Intl.NumberFormat("en-GH", {
+    style: "currency",
+    currency: "GHS",
+    maximumFractionDigits: 2,
+  }).format(Number(value));
 
 const timeFromMinutes = (totalMinutes) => {
   const hours = Math.floor(totalMinutes / 60)
@@ -88,7 +87,9 @@ const BookingForm = () => {
   const [viewMonth, setViewMonth] = useState(
     new Date(today.getFullYear(), today.getMonth(), 1),
   );
-  const [selectedService, setSelectedService] = useState(services[0]);
+  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState([]);
+  const [selectedServiceId, setSelectedServiceId] = useState("");
   const [selectedDateKey, setSelectedDateKey] = useState(() => {
     const initialMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const availableDay = getCalendarDaysForMonth(initialMonth).find(
@@ -99,8 +100,41 @@ const BookingForm = () => {
   });
   const [selectedTime, setSelectedTime] = useState("");
   const [customerName, setCustomerName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
-  const [notes, setNotes] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [submitError, setSubmitError] = useState(false);
+
+  const selectedService = services.find(
+    (service) => String(service.id) === selectedServiceId,
+  );
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetch("/api/services", { signal: controller.signal })
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message || "Could not load services.");
+        }
+        return result;
+      })
+      .then((catalog) => {
+        setCategories(catalog.categories);
+        setServices(catalog.services);
+        setSelectedServiceId(String(catalog.services[0]?.id || ""));
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          setSubmitError(true);
+          setSubmitMessage(error.message || "Could not load services.");
+        }
+      });
+
+    return () => controller.abort();
+  }, []);
 
   const visibleMonths = useMemo(
     () => [new Date(viewMonth.getFullYear(), viewMonth.getMonth(), 1)],
@@ -123,16 +157,9 @@ const BookingForm = () => {
     [selectedDay],
   );
 
-  useEffect(() => {
-    if (!timeSlots.length) {
-      setSelectedTime("");
-      return;
-    }
-
-    if (!timeSlots.includes(selectedTime)) {
-      setSelectedTime(timeSlots[0]);
-    }
-  }, [timeSlots, selectedTime]);
+  const activeTime = timeSlots.includes(selectedTime)
+    ? selectedTime
+    : timeSlots[0] || "";
 
   const selectedStatus = selectedDay?.status || "available";
   const isDateAvailable = selectedStatus === "available";
@@ -140,8 +167,10 @@ const BookingForm = () => {
   const canSubmit =
     isDateAvailable &&
     customerName.trim().length > 0 &&
+    customerEmail.trim().length > 0 &&
     customerPhone.trim().length > 0 &&
-    !!selectedTime;
+    !!selectedServiceId &&
+    !!activeTime;
 
   const goToPreviousMonth = () => {
     setViewMonth(
@@ -157,22 +186,41 @@ const BookingForm = () => {
     );
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!canSubmit) {
+    if (!canSubmit || isSubmitting) {
       return;
     }
 
-    const dateLabel =
-      selectedDay?.fullDate?.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-      }) || "selected date";
+    setIsSubmitting(true);
+    setSubmitMessage("");
+    setSubmitError(false);
 
-    alert(
-      `Booking confirmed for ${customerName} on ${dateLabel} at ${selectedTime} (${selectedService}).`,
-    );
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerName,
+          customerEmail,
+          customerPhone,
+          serviceId: selectedServiceId,
+          bookingDate: selectedDateKey,
+          bookingTime: activeTime,
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Could not submit your appointment.");
+      }
+      setSubmitMessage(result.message);
+    } catch (error) {
+      setSubmitError(true);
+      setSubmitMessage(error.message || "Could not reach the booking service.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -257,15 +305,26 @@ const BookingForm = () => {
             <select
               id="service"
               className="form-input"
-              value={selectedService}
-              onChange={(e) => setSelectedService(e.target.value)}
+              value={selectedServiceId}
+              onChange={(e) => setSelectedServiceId(e.target.value)}
+              required
             >
-              {services.map((service) => (
-                <option key={service} value={service}>
-                  {service}
-                </option>
+              <option value="" disabled>
+                {services.length ? "Choose a service" : "No services available"}
+              </option>
+              {categories.map((category) => (
+                <optgroup key={category.id} label={category.name}>
+                  {category.services.map((service) => (
+                    <option key={service.id} value={service.id}>
+                      {service.serviceName} - {formatCurrency(service.price)}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
+            {selectedService?.description && (
+              <p className="form-note">{selectedService.description}</p>
+            )}
           </div>
 
           <div className="form-group">
@@ -299,7 +358,7 @@ const BookingForm = () => {
             <select
               id="time"
               className="form-input"
-              value={selectedTime}
+              value={activeTime}
               onChange={(e) => setSelectedTime(e.target.value)}
               disabled={!isDateAvailable || timeSlots.length === 0}
             >
@@ -330,6 +389,21 @@ const BookingForm = () => {
           </div>
 
           <div className="form-group">
+            <label className="form-label" htmlFor="booking-email">
+              Email address
+            </label>
+            <input
+              id="booking-email"
+              className="form-input"
+              type="email"
+              value={customerEmail}
+              onChange={(e) => setCustomerEmail(e.target.value)}
+              placeholder="Enter your email address"
+              required
+            />
+          </div>
+
+          <div className="form-group">
             <label className="form-label" htmlFor="phone">
               Phone number
             </label>
@@ -344,26 +418,24 @@ const BookingForm = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="notes">
-              Notes / requests
-            </label>
-            <textarea
-              id="notes"
-              className="form-textarea"
-              rows="4"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Tell us about your preferred style or any special requests"
-            />
-          </div>
-
           <div className="booking-summary">
             <h3>Appointment summary</h3>
             <div className="booking-summary-item">
               <span className="summary-label">Service</span>
-              <span>{selectedService}</span>
+              <span>{selectedService?.serviceName || "Not selected"}</span>
             </div>
+            {selectedService && (
+              <>
+                <div className="booking-summary-item">
+                  <span className="summary-label">Category</span>
+                  <span>{selectedService.categoryName}</span>
+                </div>
+                <div className="booking-summary-item">
+                  <span className="summary-label">Listed price</span>
+                  <span>{formatCurrency(selectedService.price)}</span>
+                </div>
+              </>
+            )}
             <div className="booking-summary-item">
               <span className="summary-label">Date</span>
               <span>
@@ -375,7 +447,7 @@ const BookingForm = () => {
             </div>
             <div className="booking-summary-item">
               <span className="summary-label">Time</span>
-              <span>{selectedTime || "Not selected"}</span>
+              <span>{activeTime || "Not selected"}</span>
             </div>
             <div className="booking-summary-item">
               <span className="summary-label">Name</span>
@@ -385,16 +457,20 @@ const BookingForm = () => {
               <span className="summary-label">Phone</span>
               <span>{customerPhone || "Not provided"}</span>
             </div>
-            {notes && (
-              <div className="booking-summary-item">
-                <span className="summary-label">Notes</span>
-                <span>{notes}</span>
-              </div>
-            )}
           </div>
 
-          <button type="submit" className="form-submit" disabled={!canSubmit}>
-            Confirm booking
+          {submitMessage && (
+            <p className="form-note" role={submitError ? "alert" : "status"}>
+              {submitMessage}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="form-submit"
+            disabled={!canSubmit || isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Request appointment"}
           </button>
         </form>
       </div>

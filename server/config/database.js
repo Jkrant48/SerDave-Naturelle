@@ -13,7 +13,7 @@ const isLocalDatabase = ["localhost", "127.0.0.1", "::1"].includes(hostname);
 
 const pool = new pg.Pool({
   connectionString,
-  ssl: isLocalDatabase ? undefined : { rejectUnauthorized: true },
+  ssl: isLocalDatabase ? undefined : { rejectUnauthorized: false },
   connectionTimeoutMillis: 10000,
 });
 

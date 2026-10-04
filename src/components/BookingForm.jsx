@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import salonData from "../json/salon.json";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+
 const businessHours = salonData.businessHours || [];
 const slotIntervalMinutes = salonData.booking?.slotInterval || 30;
 const formatCurrency = (value) =>
@@ -198,7 +200,7 @@ const BookingForm = () => {
     setSubmitError(false);
 
     try {
-      const response = await fetch("/api/bookings", {
+      const response = await fetch(`${API_BASE_URL}/api/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

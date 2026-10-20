@@ -14,8 +14,8 @@ const BookingPage = () => {
             <h1 className="B-hero-heading">Book an Appointment</h1>
             <p>
               Choose a date, pick a service, and reserve your preferred time
-              with us. <br /> A payment of GHC 50 is required to secure your
-              booking.
+              with us. Add optional services to your booking, then pay the
+              non-refundable GH₵50 deposit through Paystack to secure it.
             </p>
           </div>
         </div>

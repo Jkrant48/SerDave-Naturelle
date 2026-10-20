@@ -6,8 +6,10 @@ import Hero from "../components/Hero";
 import Card from "../components/Card";
 import ProductCard from "../components/ProductCard";
 import Form from "../components/ContactForm";
+import "../portfolio.css";
 
 import MapComponent from "../components/MapComponent";
+import { useEffect, useState } from "react";
 import heroimg from "../assets/hero.png";
 import serviceicon from "../assets/services-icon.png";
 import hairdresser from "../assets/hairdresser.jpg";
@@ -15,7 +17,31 @@ import locsImage from "../assets/locs.jpg";
 import braidsImage from "../assets/braids.jpg";
 import haircareImage from "../assets/haircare.jpg";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+
 const HomePage = () => {
+  const [portfolio, setPortfolio] = useState([]);
+  const [portfolioError, setPortfolioError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${API_BASE_URL}/api/portfolio`, { signal: controller.signal })
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message || "Could not load portfolio images.");
+        }
+        setPortfolio(result.portfolio);
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          setPortfolioError(error.message || "Could not load portfolio images.");
+        }
+      });
+
+    return () => controller.abort();
+  }, []);
+
   return (
     <>
       <div className="container">
@@ -57,6 +83,26 @@ const HomePage = () => {
           <Link to="/services" className="services-btn">
             Explore All Services
           </Link>
+        </div>
+      </section>
+      <section className="portfolio-section">
+        <div className="portfolio-inner">
+          <h2>Our Work</h2>
+          {portfolioError && <p role="alert">{portfolioError}</p>}
+          {!portfolioError && portfolio.length === 0 && (
+            <p>Our latest styles and work will be featured here.</p>
+          )}
+          <div className="portfolio-grid">
+            {portfolio.map((item) => (
+              <article className="portfolio-card" key={item.id}>
+                <img src={item.imageUrl} alt={item.title} loading="lazy" />
+                <div>
+                  <h3>{item.title}</h3>
+                  {item.description && <p>{item.description}</p>}
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
       <section className="product-banner">

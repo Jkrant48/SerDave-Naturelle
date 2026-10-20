@@ -135,6 +135,24 @@
     gap: 1.25rem;
   }
 
+  .booking-stepper {
+    gap: 0.15rem;
+  }
+
+  .booking-step {
+    font-size: 0.66rem;
+  }
+
+  .booking-step-number {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .booking-stepper::before,
+  .booking-stepper-progress {
+    top: 1rem;
+  }
+
   .calendar-legend {
     gap: 0.6rem;
     font-size: 0.8rem;

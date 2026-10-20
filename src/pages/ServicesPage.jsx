@@ -3,8 +3,7 @@ import Footer from "../components/Footer";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import haircareImage from "../assets/haircare.jpg";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+import { apiUrl } from "../lib/api.js";
 
 const formatServicePrice = (service) => {
   const amount = new Intl.NumberFormat("en-GH", {
@@ -27,7 +26,7 @@ const ServicesPage = () => {
   useEffect(() => {
     const controller = new AbortController();
 
-    fetch(`${API_BASE_URL}/api/services`, { signal: controller.signal })
+    fetch(apiUrl("/api/services"), { signal: controller.signal })
       .then(async (response) => {
         const result = await response.json();
         if (!response.ok) {

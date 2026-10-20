@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../lib/api.js";
 import salonData from "../json/salon.json";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
 const businessHours = salonData.businessHours || [];
 const slotIntervalMinutes = salonData.booking?.slotInterval || 30;
@@ -173,7 +172,7 @@ const BookingForm = () => {
   useEffect(() => {
     const controller = new AbortController();
 
-    fetch("/api/services", { signal: controller.signal })
+    fetch(apiUrl("/api/services"), { signal: controller.signal })
       .then(async (response) => {
         const result = await response.json();
         if (!response.ok) {
@@ -268,7 +267,7 @@ const BookingForm = () => {
     };
 
     fetch(
-      `${API_BASE_URL}/api/bookings/verify?reference=${encodeURIComponent(reference)}`,
+      apiUrl(`/api/bookings/verify?reference=${encodeURIComponent(reference)}`),
     )
       .then(async (response) => {
         const result = await response.json();
@@ -436,7 +435,7 @@ const BookingForm = () => {
     paymentPopupRef.current = paymentPopup;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/bookings`, {
+      const response = await fetch(apiUrl("/api/bookings"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

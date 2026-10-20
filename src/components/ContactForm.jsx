@@ -1,6 +1,5 @@
 import { useState } from "react";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+import { apiUrl } from "../lib/api.js";
 
 const ContactForm = () => {
   const [statusMessage, setStatusMessage] = useState("");
@@ -11,7 +10,7 @@ const ContactForm = () => {
     const formData = new FormData(event.currentTarget);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/contact`, {
+      const response = await fetch(apiUrl("/api/contact"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

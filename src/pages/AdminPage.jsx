@@ -1,9 +1,9 @@
 // This route provides the admin login and management screens added for salon operations.
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../lib/api.js";
 import "../admin.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 const emptyService = {
   serviceName: "",
   description: "",
@@ -56,7 +56,7 @@ async function apiRequest(path, options = {}) {
     body = JSON.stringify(json);
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(apiUrl(path), {
     ...requestOptions,
     headers,
     body,

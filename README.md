@@ -16,7 +16,14 @@ React and Vite frontend with an Express API, Supabase PostgreSQL for application
 
 The app continues to use PostgreSQL through `pg`; `SUPABASE_DB_URL` points it at Supabase instead of Render. Admin sessions are signed and stored in HTTP-only cookies. Admin API requests verify the session and the user's `Admin` role.
 
-The Vite development server forwards `/api` requests to `http://localhost:3000`. For production, configure the web host to route `/api` to the Node server and set `VITE_API_URL` to that API's origin when it is not served from the same origin as the frontend.
+The Vite development server forwards `/api` requests to `http://localhost:3000`. For a Render deployment with a separate Static Site and API Web Service:
+
+1. Set `VITE_API_URL` on the **Static Site** to the API Web Service's base URL (for example, `https://your-api-service.onrender.com`; do not add `/api`). Vite embeds this value at build time, so save the variable and trigger a new frontend deploy after setting or changing it.
+2. Set `CLIENT_URL` on the **API Web Service** to the Static Site's exact public origin so credentialed admin requests are allowed.
+3. In the Render Static Site's **Redirects/Rewrites** settings, add a `Rewrite` from `/*` to `/index.html` so browser refreshes and direct links such as `/admin` return the React app.
+4. Check the API directly at `https://your-api-service.onrender.com/api/health`. It should return JSON with `"status":"ok"` and `"database":"connected"`. The frontend's own `...onrender.com/api/health` URL only works if that frontend origin is also configured to serve or proxy the API.
+
+All frontend API calls use the same `VITE_API_URL` helper, including the booking service catalog, so the booking page cannot accidentally request `/api/services` from the static-site origin.
 
 ## API
 

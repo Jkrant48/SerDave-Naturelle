@@ -16,8 +16,7 @@ import hairdresser from "../assets/hairdresser.jpg";
 import locsImage from "../assets/locs.jpg";
 import braidsImage from "../assets/braids.jpg";
 import haircareImage from "../assets/haircare.jpg";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+import { apiUrl } from "../lib/api.js";
 
 const HomePage = () => {
   const [portfolio, setPortfolio] = useState([]);
@@ -25,7 +24,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`${API_BASE_URL}/api/portfolio`, { signal: controller.signal })
+    fetch(apiUrl("/api/portfolio"), { signal: controller.signal })
       .then(async (response) => {
         const result = await response.json();
         if (!response.ok) {

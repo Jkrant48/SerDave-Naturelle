@@ -7,6 +7,11 @@ import pool from "./database.js";
 export const ADMIN_COOKIE_NAME = "serdave_admin";
 export const ADMIN_SESSION_SECONDS = 8 * 60 * 60;
 
+function cookieSameSite() {
+  return process.env.ADMIN_COOKIE_SAME_SITE ||
+    (process.env.NODE_ENV === "production" ? "none" : "lax");
+}
+
 function sessionSecret() {
   const secret = process.env.ADMIN_SESSION_SECRET;
   if (!secret || secret.length < 32) {
@@ -17,7 +22,7 @@ function sessionSecret() {
 
 export function assertAdminSessionConfigured() {
   sessionSecret();
-  const sameSite = process.env.ADMIN_COOKIE_SAME_SITE || "lax";
+  const sameSite = cookieSameSite();
   const secure =
     process.env.NODE_ENV === "production" ||
     process.env.ADMIN_COOKIE_SECURE === "true";
@@ -95,7 +100,7 @@ export function setAdminCookie(res, token) {
   const secure =
     process.env.NODE_ENV === "production" ||
     process.env.ADMIN_COOKIE_SECURE === "true";
-  const sameSite = process.env.ADMIN_COOKIE_SAME_SITE || "lax";
+  const sameSite = cookieSameSite();
   assertAdminSessionConfigured();
   res.cookie(ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
@@ -112,9 +117,7 @@ export function clearAdminCookie(res) {
     secure:
       process.env.NODE_ENV === "production" ||
       process.env.ADMIN_COOKIE_SECURE === "true",
-    sameSite: ["lax", "strict", "none"].includes(process.env.ADMIN_COOKIE_SAME_SITE)
-      ? process.env.ADMIN_COOKIE_SAME_SITE
-      : "lax",
+    sameSite: cookieSameSite(),
     path: "/api/admin",
   });
 }

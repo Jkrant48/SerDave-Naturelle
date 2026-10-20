@@ -28,7 +28,11 @@ async function initializePaystackPayment({ customerEmail, appointmentId, referen
   const result = await response.json();
 
   if (!response.ok || !result.status || !result.data?.authorization_url) {
-    throw new Error(result.message || "Paystack could not start the payment.");
+    const error = new Error("Paystack rejected the transaction initialization.");
+    error.paystackMessage =
+      typeof result.message === "string" ? result.message : null;
+    error.paystackStatus = response.status;
+    throw error;
   }
 
   return result.data.authorization_url;
@@ -220,9 +224,14 @@ export async function createBooking(req, res, next) {
       } catch (cleanupError) {
         return next(cleanupError);
       }
-      console.error("Paystack payment initialization failed:", error);
+      console.error("Paystack payment initialization failed:", {
+        status: error.paystackStatus || null,
+        message: error.paystackMessage || error.message,
+      });
       return res.status(502).json({
-        message: "Could not start the deposit payment. Please try again.",
+        message: error.paystackMessage
+          ? `Paystack could not start the deposit payment: ${error.paystackMessage}`
+          : "Could not connect to Paystack to start the deposit payment. Please try again.",
       });
     }
 

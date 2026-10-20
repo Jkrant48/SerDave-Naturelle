@@ -9,8 +9,8 @@ React and Vite frontend with an Express API, Supabase PostgreSQL for application
 3. Set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` from **Project Settings > API**. The service-role key is server-only; never add it to a `VITE_` variable or commit it.
 4. Create a public Storage bucket named `portfolio` in Supabase (or set `SUPABASE_STORAGE_BUCKET` to another public bucket name). The API validates image content and accepts JPEG, PNG, and WebP files up to 5 MB.
 5. Run `server/database/salon_database_postgresql(1).sql` if the salon tables have not yet been created. For an existing database, run `server/database/admin_management_migration.sql` to add the portfolio storage path and appointment add-on table.
-6. Set `CLIENT_URL` to the exact frontend origin and `ADMIN_SESSION_SECRET` to a unique random value of at least 32 characters. In production, set `ADMIN_COOKIE_SECURE=true`. Set `ADMIN_COOKIE_SAME_SITE=none` only if the frontend and API are on different sites and both use HTTPS.
-7. Set `PAYSTACK_SECRET_KEY` in the server `.env` to your Paystack secret key. It must remain server-only; the booking form opens Paystack's hosted checkout in a popup window and does not need the public key.
+6. Set `CLIENT_URL` to the exact frontend origin and `ADMIN_SESSION_SECRET` to a unique random value of at least 32 characters. When the frontend Static Site and API Web Service use different Render domains, set `ADMIN_COOKIE_SAME_SITE=none`; production cookies are secure and require HTTPS. Local development can keep `ADMIN_COOKIE_SAME_SITE=lax`.
+7. Set `PAYSTACK_SECRET_KEY` in the server `.env` to the matching Paystack test or live secret key. It must remain server-only; the booking form opens Paystack's hosted checkout in a popup window and does not need the public key. If initialization fails, the API responds with Paystack's safe error message and logs its response status in the Render API service logs.
 8. Run `npm install`, then start the API with `npm run server` and the frontend with `npm run dev` in separate terminals.
 9. Open `/admin`. If no Admin account exists, the page offers first-admin setup. Create the admin with an email and a password of at least 12 characters; setup becomes unavailable as soon as the first admin is created. Alternatively, run `npm run admin:create` in an interactive terminal to create the first admin from the command line.
 
@@ -19,7 +19,7 @@ The app continues to use PostgreSQL through `pg`; `SUPABASE_DB_URL` points it at
 The Vite development server forwards `/api` requests to `http://localhost:3000`. For a Render deployment with a separate Static Site and API Web Service:
 
 1. Set `VITE_API_URL` on the **Static Site** to the API Web Service's base URL (for example, `https://your-api-service.onrender.com`; do not add `/api`). Vite embeds this value at build time, so save the variable and trigger a new frontend deploy after setting or changing it.
-2. Set `CLIENT_URL` on the **API Web Service** to the Static Site's exact public origin so credentialed admin requests are allowed.
+2. Set `CLIENT_URL` on the **API Web Service** to the Static Site's exact public origin so credentialed admin requests are allowed. Set `ADMIN_COOKIE_SAME_SITE=none`; otherwise the browser will not send the admin session cookie between separate Render domains, and management requests will return `401`.
 3. In the Render Static Site's **Redirects/Rewrites** settings, add a `Rewrite` from `/*` to `/index.html` so browser refreshes and direct links such as `/admin` return the React app.
 4. Check the API directly at `https://your-api-service.onrender.com/api/health`. It should return JSON with `"status":"ok"` and `"database":"connected"`. The frontend's own `...onrender.com/api/health` URL only works if that frontend origin is also configured to serve or proxy the API.
 

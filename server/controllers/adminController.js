@@ -1,9 +1,9 @@
 // Admin management APIs read and mutate the existing salon tables without exposing them publicly.
-import process from "node:process";
 import { Buffer } from "node:buffer";
 import pool from "../config/database.js";
 import {
   deletePortfolioImage,
+  getPortfolioPublicUrl,
   isValidStoragePath,
   uploadPortfolioImage as uploadImageToSupabase,
 } from "../config/supabaseStorage.js";
@@ -14,9 +14,32 @@ const toId = (value) => {
   return Number.isInteger(id) && id > 0 ? id : null;
 };
 
+function withCurrentPortfolioUrl(item) {
+  return isValidStoragePath(item.storagePath)
+    ? { ...item, imageUrl: getPortfolioPublicUrl(item.storagePath) }
+    : item;
+}
+
+function queryAdminMessages() {
+  return pool.query(
+    `SELECT message_id AS id, customer_name AS "customerName",
+            customer_email AS "customerEmail", message_text AS message,
+            created_at AS "createdAt", is_read AS "isRead"
+     FROM public.messages
+     ORDER BY created_at DESC`,
+  );
+}
+
 export async function getAdminDashboard(req, res, next) {
   try {
-    const [appointments, categories, services, portfolio, employees] = await Promise.all([
+    const [
+      appointments,
+      categories,
+      services,
+      portfolio,
+      employees,
+      messages,
+    ] = await Promise.all([
       pool.query(
         `SELECT a.appointments_id AS id, a.customer_name AS "customerName",
                 a.customer_email AS "customerEmail", a.customer_phone AS "customerPhone",
@@ -62,15 +85,50 @@ export async function getAdminDashboard(req, res, next) {
          WHERE user_role = 'Employee'
          ORDER BY user_email`,
       ),
+      queryAdminMessages(),
     ]);
 
     return res.json({
       appointments: appointments.rows,
       categories: categories.rows,
       services: services.rows,
-      portfolio: portfolio.rows,
+      portfolio: portfolio.rows.map(withCurrentPortfolioUrl),
       employees: employees.rows,
+      messages: messages.rows,
     });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function getAdminMessages(req, res, next) {
+  try {
+    const { rows } = await queryAdminMessages();
+    return res.json({ messages: rows });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function markAdminMessageRead(req, res, next) {
+  const id = toId(req.params.id);
+  if (!id) {
+    return res.status(400).json({ message: "Provide a valid message." });
+  }
+
+  try {
+    const { rows } = await pool.query(
+      `UPDATE public.messages SET is_read = TRUE
+       WHERE message_id = $1
+       RETURNING message_id AS id, customer_name AS "customerName",
+                 customer_email AS "customerEmail", message_text AS message,
+                 created_at AS "createdAt", is_read AS "isRead"`,
+      [id],
+    );
+    if (!rows.length) {
+      return res.status(404).json({ message: "Message not found." });
+    }
+    return res.json({ message: rows[0] });
   } catch (error) {
     return next(error);
   }
@@ -370,8 +428,7 @@ export async function createPortfolioItem(req, res, next) {
   }
 
   try {
-    const { projectUrl, bucket } = getPortfolioPublicUrlConfig();
-    const imageUrl = `${projectUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/${encodeURIComponent(storagePath)}`;
+    const imageUrl = getPortfolioPublicUrl(storagePath);
     const { rows } = await pool.query(
       `INSERT INTO public.portfolio
          (image_url, portfolio_title, portfolio_description, services_id, storage_path)
@@ -388,15 +445,6 @@ export async function createPortfolioItem(req, res, next) {
     }
     return next(error);
   }
-}
-
-function getPortfolioPublicUrlConfig() {
-  const projectUrl = process.env.SUPABASE_URL?.replace(/\/+$/, "");
-  const bucket = process.env.SUPABASE_STORAGE_BUCKET || "portfolio";
-  if (!projectUrl) {
-    throw new Error("SUPABASE_URL must be configured for the portfolio.");
-  }
-  return { projectUrl, bucket };
 }
 
 export async function discardPortfolioImage(req, res, next) {
@@ -417,10 +465,13 @@ export async function listPortfolio(req, res, next) {
   try {
     const { rows } = await pool.query(
       `SELECT portfolio_id AS id, image_url AS "imageUrl",
-              portfolio_title AS title, portfolio_description AS description
+              portfolio_title AS title, portfolio_description AS description,
+              storage_path AS "storagePath"
        FROM public.portfolio ORDER BY portfolio_id DESC`,
     );
-    return res.json({ portfolio: rows });
+    return res.json({
+      portfolio: rows.map(withCurrentPortfolioUrl).map(({ storagePath, ...item }) => item),
+    });
   } catch (error) {
     return next(error);
   }

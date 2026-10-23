@@ -109,6 +109,7 @@ const HomePage = () => {
           <h2 className="product-banner-heading">
             Discover Our Exclusive Products
           </h2>
+          <p>coming soon</p>
           <div className="product-banner-content">
             <ProductCard
               title="Hair Care Products"

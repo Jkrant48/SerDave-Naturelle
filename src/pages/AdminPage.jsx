@@ -17,10 +17,13 @@ const emptyService = {
 const adminSections = [
   { id: "employees", label: "Employee management" },
   { id: "appointments", label: "Appointments" },
+  { id: "messages", label: "Messages" },
   { id: "services", label: "Services management" },
   { id: "categories", label: "Category management" },
   { id: "portfolio", label: "Upload image" },
 ];
+
+const messagesErrorMessage = "Oops, something isn't right. Please try again later.";
 
 function PasswordToggle({ visible, onToggle, label }) {
   return (
@@ -79,6 +82,9 @@ function AdminPage() {
   const [dashboard, setDashboard] = useState(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [isWorking, setIsWorking] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [openMessageId, setOpenMessageId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [notice, setNotice] = useState("");
   const [activeSection, setActiveSection] = useState("appointments");
@@ -102,10 +108,26 @@ function AdminPage() {
     serviceId: "",
     image: null,
   });
-
   const loadDashboard = useCallback(async () => {
     const result = await apiRequest("/api/admin");
     setDashboard(result);
+  }, []);
+
+  const loadMessages = useCallback(async () => {
+    setIsLoadingMessages(true);
+    setErrorMessage("");
+    try {
+      const { messages: result } = await apiRequest("/api/admin/messages");
+      if (!Array.isArray(result)) {
+        throw new Error("The messages response was invalid.");
+      }
+      setMessages(result);
+    } catch (error) {
+      console.error("Could not load admin messages:", error);
+      setErrorMessage(messagesErrorMessage);
+    } finally {
+      setIsLoadingMessages(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -150,6 +172,29 @@ function AdminPage() {
       return false;
     } finally {
       setIsWorking(false);
+    }
+  };
+
+  const openMessage = async (message) => {
+    setErrorMessage("");
+    setOpenMessageId((currentId) =>
+      currentId === message.id ? null : message.id,
+    );
+    if (message.isRead) return;
+
+    try {
+      const result = await apiRequest(
+        `/api/admin/messages/${message.id}/read`,
+        { method: "PATCH" },
+      );
+      setMessages((currentMessages) =>
+        currentMessages.map((currentMessage) =>
+          currentMessage.id === message.id ? result.message : currentMessage,
+        ),
+      );
+    } catch (error) {
+      console.error(`Could not mark message ${message.id} as read:`, error);
+      setErrorMessage(messagesErrorMessage);
     }
   };
 
@@ -531,6 +576,7 @@ function AdminPage() {
                 setActiveSection(section.id);
                 setErrorMessage("");
                 setNotice("");
+                if (section.id === "messages") loadMessages();
               }}
             >
               <span aria-hidden="true" className={`admin-nav-icon icon-${section.id}`} />
@@ -685,6 +731,41 @@ function AdminPage() {
               </div>
             ) : (
               <p>No appointments have been booked yet.</p>
+            )}
+          </section>}
+
+          {activeSection === "messages" && <section className="admin-panel">
+            <h2>Messages</h2>
+            {isLoadingMessages ? (
+              <p role="status">Loading messages...</p>
+            ) : messages.length ? (
+              <div className="admin-message-list">
+                {messages.map((message) => (
+                  <article className="admin-message-item" key={message.id}>
+                    <button
+                      type="button"
+                      className="admin-message-toggle"
+                      aria-expanded={openMessageId === message.id}
+                      onClick={() => openMessage(message)}
+                    >
+                      <span>
+                        <strong>{message.customerName}</strong>
+                        <small>
+                          {message.customerEmail} · {new Date(message.createdAt).toLocaleString()}
+                        </small>
+                      </span>
+                      <span className={message.isRead ? "message-read" : "message-unread"}>
+                        {message.isRead ? "Read" : "Unread"}
+                      </span>
+                    </button>
+                    {openMessageId === message.id && (
+                      <p className="admin-message-content">{message.message}</p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p>No messages have been received yet.</p>
             )}
           </section>}
 

@@ -9,10 +9,10 @@
 }
 
 .portfolio-inner > h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   color: var(--text-h);
   font-family: var(--heading);
-  font-size: 2rem;
+  font-size: 3rem;
 }
 
 .portfolio-grid {
@@ -25,14 +25,15 @@
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 12px;
+  width: 100%;
   background: var(--bg-light);
   box-shadow: var(--shadow);
 }
 
 .portfolio-card img {
   width: 100%;
-  height: 220px;
-  object-fit: cover;
+  height: auto;
+  background: var(--bg);
 }
 
 .portfolio-card div {
@@ -42,10 +43,4 @@
 .portfolio-card h3 {
   margin-bottom: 0.4rem;
   color: var(--text-h);
-}
-
-@media (max-width: 650px) {
-  .portfolio-card img {
-    height: 190px;
-  }
 }

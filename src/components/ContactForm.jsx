@@ -7,7 +7,8 @@ const ContactForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
     try {
       const response = await fetch(apiUrl("/api/contact"), {
@@ -22,6 +23,9 @@ const ContactForm = () => {
       const result = await response.json();
       setIsError(!response.ok);
       setStatusMessage(result.message || "Could not submit your message.");
+      if (response.ok) {
+        form.reset();
+      }
     } catch {
       setIsError(true);
       setStatusMessage("Could not reach the contact service.");

@@ -18,6 +18,14 @@ export default function errorHandler(error, req, res, next) {
   }
 
   console.error(error);
+  if (error.publicMessage) {
+    const status =
+      Number.isInteger(error.status) && error.status >= 400 && error.status < 600
+        ? error.status
+        : 502;
+    return res.status(status).json({ message: error.publicMessage });
+  }
+
   if (isDatabaseConnectionError(error)) {
     return res.status(503).json({
       message:

@@ -168,6 +168,56 @@
   color: var(--text-h);
 }
 
+.admin-message-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.admin-message-item {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.admin-shell .admin-message-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+}
+
+.admin-message-toggle > span:first-child {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.admin-message-toggle small {
+  color: #666;
+  font-weight: 400;
+}
+
+.admin-message-toggle .message-unread {
+  color: var(--accent-bg);
+  font-weight: 700;
+}
+
+.admin-message-toggle .message-read {
+  color: #666;
+}
+
+.admin-message-content {
+  padding: 0 0.9rem 0.9rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .admin-table small {
   display: block;
   margin-top: 0.25rem;
@@ -377,6 +427,7 @@
 
 .icon-employees::before { content: "E"; }
 .icon-appointments::before { content: "A"; }
+.icon-messages::before { content: "M"; }
 .icon-services::before { content: "S"; }
 .icon-categories::before { content: "C"; }
 .icon-portfolio::before { content: "+"; }

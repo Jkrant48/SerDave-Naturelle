@@ -377,9 +377,15 @@ h3 {
 
 .product-banner h2 {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 0.5rem;
   font-family: var(--heading);
   font-size: 2rem;
+}
+
+.product-banner-inner > p {
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
 }
 
 .product-banner-content {
@@ -855,6 +861,121 @@ h3 {
 .reviewer span {
   color: rgba(49, 41, 35, 0.7);
   font-size: 0.85rem;
+}
+
+.review-link {
+  display: inline-block;
+  padding: 0.65rem 1rem;
+  border-radius: 6px;
+  background: var(--accent-bg);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.review-form-area {
+  margin-top: 2rem;
+  scroll-margin-top: 1.5rem;
+}
+
+.review-form-panel {
+  max-width: 640px;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-light);
+  box-shadow: var(--shadow);
+}
+
+.review-form-panel h3 {
+  margin-bottom: 1rem;
+}
+
+.review-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.review-form > label {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.review-form input:not([type="radio"]),
+.review-form textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+
+.review-form button {
+  width: fit-content;
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent-bg);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.review-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.review-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  border: 0;
+}
+
+.review-rating legend {
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.review-rating label {
+  position: relative;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.review-rating input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.review-rating label:has(input:checked),
+.review-rating label:has(input:checked) ~ label,
+.review-rating label:hover,
+.review-rating label:hover ~ label {
+  color: #e7a747;
+}
+
+.review-rating input:focus-visible + span {
+  outline: 2px solid var(--accent-bg);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
 }
 
 /* footer */

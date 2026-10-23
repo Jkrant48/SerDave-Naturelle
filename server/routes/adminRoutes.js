@@ -9,6 +9,8 @@ import {
   deleteCategory,
   discardPortfolioImage,
   getAdminDashboard,
+  getAdminMessages,
+  markAdminMessageRead,
   updateCategory,
   updateService,
   uploadPortfolioImage,
@@ -36,6 +38,8 @@ router.get("/session", requireAdmin, getAdminSession);
 
 router.use(requireAdmin);
 router.get("/", getAdminDashboard);
+router.get("/messages", getAdminMessages);
+router.patch("/messages/:id/read", markAdminMessageRead);
 
 // Employee creation is protected by the Admin-only middleware above.
 router.post("/employees", createEmployeeAccount);

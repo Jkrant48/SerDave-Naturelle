@@ -88,6 +88,7 @@ function AdminPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [notice, setNotice] = useState("");
   const [activeSection, setActiveSection] = useState("appointments");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showPasswords, setShowPasswords] = useState(false);
   const [login, setLogin] = useState({ email: "", password: "" });
   const [firstAdminForm, setFirstAdminForm] = useState({
@@ -556,45 +557,62 @@ function AdminPage() {
 
   return (
     <main className="admin-shell admin-layout">
-      <aside className="admin-sidebar" aria-label="Admin navigation">
-        <div className="admin-brand">
-          <span className="admin-brand-mark" aria-hidden="true">S</span>
-          <div>
-            <strong>SerDave</strong>
-            <small>Naturelle</small>
+      <aside className={`admin-sidebar${isSidebarOpen ? " is-open" : ""}`} aria-label="Admin navigation">
+        <div className="admin-sidebar-header">
+          <div className="admin-brand">
+            <span className="admin-brand-mark" aria-hidden="true">S</span>
+            <div>
+              <strong>SerDave</strong>
+              <small>Naturelle</small>
+            </div>
           </div>
+          <button
+            type="button"
+            className="admin-menu-toggle"
+            aria-expanded={isSidebarOpen}
+            aria-controls="admin-sidebar-menu"
+            aria-label={isSidebarOpen ? "Close admin menu" : "Open admin menu"}
+            onClick={() => setIsSidebarOpen((open) => !open)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
-        <p className="admin-sidebar-label">Workspace</p>
-        <nav className="admin-nav">
-          {adminSections.map((section) => (
-            <button
-              type="button"
-              key={section.id}
-              className={activeSection === section.id ? "active" : ""}
-              aria-current={activeSection === section.id ? "page" : undefined}
-              onClick={() => {
-                setActiveSection(section.id);
-                setErrorMessage("");
-                setNotice("");
-                if (section.id === "messages") loadMessages();
-              }}
-            >
-              <span aria-hidden="true" className={`admin-nav-icon icon-${section.id}`} />
-              {section.label}
-            </button>
-          ))}
-        </nav>
-        <Link to="/" className="admin-back-link">
-          ← Back to website
-        </Link>
-        <button
-          type="button"
-          className="secondary-button admin-sidebar-signout"
-          onClick={signOut}
-          disabled={isWorking}
-        >
-          Sign out
-        </button>
+        <div className="admin-sidebar-menu" id="admin-sidebar-menu">
+          <p className="admin-sidebar-label">Workspace</p>
+          <nav className="admin-nav">
+            {adminSections.map((section) => (
+              <button
+                type="button"
+                key={section.id}
+                className={activeSection === section.id ? "active" : ""}
+                aria-current={activeSection === section.id ? "page" : undefined}
+                onClick={() => {
+                  setActiveSection(section.id);
+                  setIsSidebarOpen(false);
+                  setErrorMessage("");
+                  setNotice("");
+                  if (section.id === "messages") loadMessages();
+                }}
+              >
+                <span aria-hidden="true" className={`admin-nav-icon icon-${section.id}`} />
+                {section.label}
+              </button>
+            ))}
+          </nav>
+          <Link to="/" className="admin-back-link">
+            ← Back to website
+          </Link>
+          <button
+            type="button"
+            className="secondary-button admin-sidebar-signout"
+            onClick={signOut}
+            disabled={isWorking}
+          >
+            Sign out
+          </button>
+        </div>
       </aside>
       <div className="admin-content">
       <header className="admin-topbar">
@@ -697,7 +715,7 @@ function AdminPage() {
             <h2>Appointments</h2>
             {dashboard.appointments.length ? (
               <div className="admin-table-wrap">
-                <table className="admin-table">
+                <table className="admin-table admin-appointments-table">
                   <thead>
                     <tr>
                       <th>Date and time</th>
@@ -711,19 +729,19 @@ function AdminPage() {
                   <tbody>
                     {dashboard.appointments.map((appointment) => (
                       <tr key={appointment.id}>
-                        <td>{appointment.appointmentDatetime}</td>
-                        <td>
+                        <td data-label="Date and time">{appointment.appointmentDatetime}</td>
+                        <td data-label="Customer">
                           {appointment.customerName}
                           <small>{appointment.customerEmail}<br />{appointment.customerPhone}</small>
                         </td>
-                        <td>{appointment.serviceName}</td>
-                        <td>
+                        <td data-label="Service">{appointment.serviceName}</td>
+                        <td data-label="Add-ons">
                           {appointment.addOns.length
                             ? appointment.addOns.map((addOn) => addOn.serviceName).join(", ")
                             : "—"}
                         </td>
-                        <td>{appointment.status.replaceAll("_", " ")}</td>
-                        <td>GH₵{appointment.price} / GH₵{appointment.depositAmount}</td>
+                        <td data-label="Status">{appointment.status.replaceAll("_", " ")}</td>
+                        <td data-label="Price / deposit">GH₵{appointment.price} / GH₵{appointment.depositAmount}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -930,18 +948,18 @@ function AdminPage() {
               </div>
             </form>
             <div className="admin-table-wrap">
-              <table className="admin-table">
+              <table className="admin-table admin-services-table">
                 <thead>
                   <tr><th>Service</th><th>Category</th><th>Price</th><th>Visibility</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                   {dashboard.services.map((service) => (
                     <tr key={service.id}>
-                      <td>{service.serviceName}<small>{service.description}</small></td>
-                      <td>{dashboard.categories.find((category) => category.id === service.categoryId)?.name || "—"}</td>
-                      <td>GH₵{service.price}</td>
-                      <td>{service.active ? "Active" : "Hidden"}</td>
-                      <td className="admin-actions">
+                      <td data-label="Service">{service.serviceName}<small>{service.description}</small></td>
+                      <td data-label="Category">{dashboard.categories.find((category) => category.id === service.categoryId)?.name || "—"}</td>
+                      <td data-label="Price">GH₵{service.price}</td>
+                      <td data-label="Visibility">{service.active ? "Active" : "Hidden"}</td>
+                      <td data-label="Actions" className="admin-actions">
                         <button
                           type="button"
                           className="secondary-button"

@@ -13,9 +13,9 @@ import { useEffect, useState } from "react";
 import heroimg from "../assets/hero.png";
 import serviceicon from "../assets/services-icon.png";
 import hairdresser from "../assets/hairdresser.jpg";
-import locsImage from "../assets/locs.jpg";
-import braidsImage from "../assets/braids.jpg";
-import haircareImage from "../assets/haircare.jpg";
+import locsImage from "../assets/locs.png";
+import braidsImage from "../assets/braids.png";
+import haircareImage from "../assets/haircare.jpeg";
 import { apiUrl } from "../lib/api.js";
 
 const HomePage = () => {
@@ -34,7 +34,9 @@ const HomePage = () => {
       })
       .catch((error) => {
         if (error.name !== "AbortError") {
-          setPortfolioError(error.message || "Could not load portfolio images.");
+          setPortfolioError(
+            error.message || "Could not load portfolio images.",
+          );
         }
       });
 

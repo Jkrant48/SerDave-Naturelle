@@ -306,6 +306,15 @@
   color: #ffffff;
 }
 
+.admin-sidebar-header,
+.admin-sidebar-menu {
+  display: contents;
+}
+
+.admin-menu-toggle {
+  display: none;
+}
+
 .admin-brand {
   display: flex;
   align-items: center;
@@ -520,34 +529,60 @@
   color: #a52a2a;
 }
 
-@media (max-width: 650px) {
-  .admin-topbar,
-  .admin-inline-form {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .admin-form-grid {
-    grid-template-columns: 1fr;
-  }
-  .admin-inline-form label {
-    width: 100%;
-  }
-}
-
-@media (max-width: 850px) {
+@media (max-width: 1024px) {
   .admin-layout {
     grid-template-columns: 1fr;
   }
 
   .admin-sidebar {
     position: static;
+    z-index: 2;
     min-height: auto;
-    padding: 1rem;
+    padding: 1rem clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .admin-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
   }
 
   .admin-brand {
-    padding-bottom: 1rem;
+    padding: 0;
+  }
+
+  .admin-shell .admin-menu-toggle {
+    display: flex;
+    flex: 0 0 2.75rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.6rem;
+    border-color: rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: #ffffff;
+  }
+
+  .admin-menu-toggle span {
+    display: block;
+    width: 1.25rem;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  .admin-sidebar-menu {
+    display: none;
+    padding-top: 1rem;
+  }
+
+  .admin-sidebar.is-open .admin-sidebar-menu {
+    display: flex;
+    flex-direction: column;
   }
 
   .admin-sidebar-label {
@@ -555,33 +590,219 @@
   }
 
   .admin-shell .admin-nav {
-    display: flex;
+    display: grid;
     gap: 0.4rem;
-    overflow-x: auto;
-    padding-bottom: 0.4rem;
   }
 
   .admin-shell .admin-nav button {
-    flex: 0 0 auto;
-    width: auto;
+    width: 100%;
     white-space: nowrap;
   }
 
   .admin-shell .admin-nav button.active {
-    box-shadow: inset 0 -3px 0 var(--accent-bg);
+    box-shadow: inset 3px 0 0 var(--accent-bg);
   }
 
   .admin-shell .admin-sidebar-signout {
-    align-self: flex-end;
-    width: auto;
+    align-self: flex-start;
+    width: 100%;
     margin-top: 0.75rem;
   }
 
   .admin-sidebar .admin-back-link {
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
   }
 
   .admin-content {
-    padding-top: 1.5rem;
+    padding: 1.5rem clamp(1rem, 3vw, 2rem) 3rem;
+  }
+
+  .admin-panel {
+    min-width: 0;
+  }
+
+  .admin-table-wrap {
+    max-width: 100%;
+    overscroll-behavior-x: contain;
+  }
+}
+
+@media (max-width: 650px) {
+  .admin-topbar,
+  .admin-inline-form {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-content .admin-topbar {
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .admin-content .admin-topbar h1 {
+    overflow-wrap: anywhere;
+    font-size: clamp(1.6rem, 7vw, 2rem);
+  }
+
+  .admin-content .admin-panel {
+    padding: 1rem;
+  }
+
+  .admin-form {
+    min-width: 0;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-inline-form label {
+    width: 100%;
+  }
+
+  .admin-list li {
+    align-items: flex-start;
+    flex-direction: column;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-actions {
+    flex-wrap: wrap;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 0.6rem;
+  }
+
+  .admin-appointments-table,
+  .admin-services-table {
+    display: block;
+    min-width: 0;
+    border-collapse: separate;
+  }
+
+  .admin-appointments-table thead,
+  .admin-services-table thead {
+    display: none;
+  }
+
+  .admin-appointments-table tbody,
+  .admin-services-table tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .admin-appointments-table tr,
+  .admin-services-table tr {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .admin-appointments-table td,
+  .admin-services-table td {
+    display: grid;
+    grid-template-columns: minmax(6.5rem, 0.38fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 0.75rem;
+    padding: 0.65rem;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-appointments-table td::before,
+  .admin-services-table td::before {
+    content: attr(data-label);
+    color: var(--text-h);
+    font-weight: 700;
+  }
+
+  .admin-appointments-table td:last-child,
+  .admin-services-table td:last-child {
+    border-bottom: 0;
+  }
+
+  .admin-services-table td.admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .admin-services-table td.admin-actions::before {
+    flex: 0 0 100%;
+  }
+
+  .admin-services-table .admin-actions button {
+    width: auto;
+  }
+
+  .admin-shell .admin-message-toggle {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .admin-message-toggle > span:first-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-message-toggle small {
+    overflow-wrap: anywhere;
+  }
+
+  .admin-message-toggle > span:last-child {
+    flex: 0 0 auto;
+  }
+
+  .admin-portfolio-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+    gap: 0.75rem;
+  }
+
+  .admin-login {
+    margin: 2rem auto;
+  }
+
+  .admin-login-back-link {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-sidebar {
+    padding: 0.85rem;
+  }
+
+  .admin-brand {
+    gap: 0.6rem;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .admin-content {
+    padding: 1rem 0.75rem 2rem;
+  }
+
+  .admin-content .admin-panel {
+    padding: 0.85rem;
+  }
+
+  .admin-shell button {
+    min-height: 2.75rem;
+  }
+
+  .admin-shell .admin-nav button {
+    min-height: 2.75rem;
+  }
+
+  .admin-shell .admin-sidebar-signout {
+    align-self: stretch;
+    width: 100%;
+  }
+
+  .admin-message-content {
+    padding-right: 0.7rem;
+    padding-left: 0.7rem;
   }
 }

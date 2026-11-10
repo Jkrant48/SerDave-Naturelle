@@ -133,7 +133,7 @@ export function requireSameOrigin(req, res, next) {
   return next();
 }
 
-export async function requireAdmin(req, res, next) {
+export async function requireStaff(req, res, next) {
   try {
     if (req.method !== "GET") {
       const origin = req.get("origin");
@@ -148,22 +148,33 @@ export async function requireAdmin(req, res, next) {
     const token = getCookie(req, ADMIN_COOKIE_NAME);
     const claims = token && verifyAdminToken(token);
     if (!claims) {
-      return res.status(401).json({ message: "Admin login required." });
+      return res.status(401).json({ message: "Staff login required." });
     }
 
     const { rows } = await pool.query(
-      `SELECT users_id, user_email
+      `SELECT users_id, user_email, user_role
        FROM public.users
-       WHERE users_id = $1 AND user_role = 'Admin'`,
+       WHERE users_id = $1 AND user_role IN ('Admin', 'Employee')`,
       [claims.sub],
     );
     if (rows.length === 0) {
-      return res.status(401).json({ message: "Admin login required." });
+      return res.status(401).json({ message: "Staff login required." });
     }
 
-    req.admin = { id: rows[0].users_id, email: rows[0].user_email };
+    req.admin = {
+      id: rows[0].users_id,
+      email: rows[0].user_email,
+      role: rows[0].user_role,
+    };
     return next();
   } catch (error) {
     return next(error);
   }
+}
+
+export function requireAdmin(req, res, next) {
+  if (req.admin?.role !== "Admin") {
+    return res.status(403).json({ message: "Admin access required." });
+  }
+  return next();
 }

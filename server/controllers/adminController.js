@@ -1,4 +1,4 @@
-// Admin management APIs read and mutate the existing salon tables without exposing them publicly.
+// Staff management APIs read and mutate the existing salon tables without exposing them publicly.
 import { Buffer } from "node:buffer";
 import pool from "../config/database.js";
 import {
@@ -7,6 +7,7 @@ import {
   isValidStoragePath,
   uploadPortfolioImage as uploadImageToSupabase,
 } from "../config/supabaseStorage.js";
+import { clearAdminCookie } from "../config/adminSession.js";
 import { hashPassword } from "../utils/passwords.js";
 
 const toId = (value) => {
@@ -37,7 +38,7 @@ export async function getAdminDashboard(req, res, next) {
       categories,
       services,
       portfolio,
-      employees,
+      accounts,
       messages,
     ] = await Promise.all([
       pool.query(
@@ -79,12 +80,14 @@ export async function getAdminDashboard(req, res, next) {
                 services_id AS "serviceId", storage_path AS "storagePath"
          FROM public.portfolio ORDER BY portfolio_id DESC`,
       ),
-      pool.query(
-        `SELECT users_id AS id, user_email AS email, created_at AS "createdAt"
-         FROM public.users
-         WHERE user_role = 'Employee'
-         ORDER BY user_email`,
-      ),
+      req.admin.role === "Admin"
+        ? pool.query(
+            `SELECT users_id AS id, user_email AS email, user_role AS role,
+                    created_at AS "createdAt"
+             FROM public.users
+             ORDER BY user_email`,
+          )
+        : Promise.resolve({ rows: [] }),
       queryAdminMessages(),
     ]);
 
@@ -93,7 +96,7 @@ export async function getAdminDashboard(req, res, next) {
       categories: categories.rows,
       services: services.rows,
       portfolio: portfolio.rows.map(withCurrentPortfolioUrl),
-      employees: employees.rows,
+      accounts: req.admin.role === "Admin" ? accounts.rows : undefined,
       messages: messages.rows,
     });
   } catch (error) {
@@ -170,6 +173,34 @@ export async function createEmployeeAccount(req, res, next) {
   } catch (error) {
     if (error.code === "23505") {
       return res.status(409).json({ message: "An account with that email already exists." });
+    }
+    return next(error);
+  }
+}
+
+export async function deleteAccount(req, res, next) {
+  const id = toId(req.params.id);
+  if (!id) {
+    return res.status(400).json({ message: "Provide a valid account." });
+  }
+
+  try {
+    const { rowCount } = await pool.query(
+      `DELETE FROM public.users WHERE users_id = $1`,
+      [id],
+    );
+    if (!rowCount) {
+      return res.status(404).json({ message: "Account not found." });
+    }
+    if (id === req.admin.id) {
+      clearAdminCookie(res);
+    }
+    return res.status(204).end();
+  } catch (error) {
+    if (error.code === "23503") {
+      return res.status(409).json({
+        message: "This account cannot be deleted while it is linked to other records.",
+      });
     }
     return next(error);
   }
@@ -454,6 +485,15 @@ export async function discardPortfolioImage(req, res, next) {
   }
 
   try {
+    const { rows } = await pool.query(
+      `SELECT 1 FROM public.portfolio WHERE storage_path = $1 LIMIT 1`,
+      [storagePath],
+    );
+    if (rows.length) {
+      return res.status(409).json({
+        message: "A published portfolio image cannot be removed through this endpoint.",
+      });
+    }
     await deletePortfolioImage(storagePath);
     return res.status(204).end();
   } catch (error) {
@@ -470,7 +510,12 @@ export async function listPortfolio(req, res, next) {
        FROM public.portfolio ORDER BY portfolio_id DESC`,
     );
     return res.json({
-      portfolio: rows.map(withCurrentPortfolioUrl).map(({ storagePath, ...item }) => item),
+      portfolio: rows.map(withCurrentPortfolioUrl).map((item) => ({
+        id: item.id,
+        imageUrl: item.imageUrl,
+        title: item.title,
+        description: item.description,
+      })),
     });
   } catch (error) {
     return next(error);

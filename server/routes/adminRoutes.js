@@ -1,10 +1,11 @@
-// Admin routes require a database-backed admin session except login and logout.
+// Management routes require a database-backed staff session except login and logout.
 import express, { Router } from "express";
 import {
   createCategory,
   createEmployeeAccount,
   createPortfolioItem,
   createService,
+  deleteAccount,
   deactivateService,
   deleteCategory,
   discardPortfolioImage,
@@ -24,6 +25,7 @@ import {
 } from "../controllers/adminAuthController.js";
 import {
   requireAdmin,
+  requireStaff,
   requireSameOrigin,
 } from "../config/adminSession.js";
 
@@ -34,22 +36,22 @@ router.get("/setup-status", getAdminSetupStatus);
 router.post("/setup", requireSameOrigin, createFirstAdmin);
 router.post("/login", requireSameOrigin, loginAdmin);
 router.post("/logout", requireSameOrigin, logoutAdmin);
-router.get("/session", requireAdmin, getAdminSession);
+router.get("/session", requireStaff, getAdminSession);
 
-router.use(requireAdmin);
+router.use(requireStaff);
 router.get("/", getAdminDashboard);
 router.get("/messages", getAdminMessages);
 router.patch("/messages/:id/read", markAdminMessageRead);
 
-// Employee creation is protected by the Admin-only middleware above.
-router.post("/employees", createEmployeeAccount);
+router.post("/employees", requireAdmin, createEmployeeAccount);
+router.delete("/accounts/:id", requireAdmin, deleteAccount);
 router.post("/categories", createCategory);
 router.put("/categories/:id", updateCategory);
-router.delete("/categories/:id", deleteCategory);
+router.delete("/categories/:id", requireAdmin, deleteCategory);
 
 router.post("/services", createService);
 router.put("/services/:id", updateService);
-router.delete("/services/:id", deactivateService);
+router.delete("/services/:id", requireAdmin, deactivateService);
 
 router.post(
   "/portfolio-image",

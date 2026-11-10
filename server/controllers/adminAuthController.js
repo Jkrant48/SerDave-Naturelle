@@ -97,7 +97,9 @@ export async function createFirstAdmin(req, res, next) {
 
     loginAttempts.delete(clientAddress);
     setAdminCookie(res, createAdminToken(rows[0].users_id));
-    return res.status(201).json({ admin: { email: rows[0].user_email } });
+    return res.status(201).json({
+      admin: { email: rows[0].user_email, role: "Admin" },
+    });
   } catch (error) {
     if (client) {
       try {
@@ -119,7 +121,7 @@ export async function loginAdmin(req, res, next) {
   const email = typeof req.body?.email === "string" ? req.body.email.trim() : "";
   const password = typeof req.body?.password === "string" ? req.body.password : "";
   if (!email || !password || email.length > 255 || password.length > 1024) {
-    return res.status(400).json({ message: "Enter your admin email and password." });
+    return res.status(400).json({ message: "Enter your email and password." });
   }
 
   const clientAddress = req.ip;
@@ -127,20 +129,23 @@ export async function loginAdmin(req, res, next) {
 
   try {
     const { rows } = await pool.query(
-      `SELECT users_id, user_email, user_password_hash
+      `SELECT users_id, user_email, user_password_hash, user_role
        FROM public.users
-       WHERE lower(user_email) = lower($1) AND user_role = 'Admin'`,
+       WHERE lower(user_email) = lower($1)
+         AND user_role IN ('Admin', 'Employee')`,
       [email],
     );
 
     const user = rows[0];
     if (!user || !(await verifyPassword(password, user.user_password_hash))) {
-      return res.status(401).json({ message: "Invalid admin email or password." });
+      return res.status(401).json({ message: "Invalid email or password." });
     }
 
     loginAttempts.delete(clientAddress);
     setAdminCookie(res, createAdminToken(user.users_id));
-    return res.json({ admin: { email: user.user_email } });
+    return res.json({
+      admin: { email: user.user_email, role: user.user_role },
+    });
   } catch (error) {
     return next(error);
   }
@@ -152,5 +157,7 @@ export function logoutAdmin(req, res) {
 }
 
 export function getAdminSession(req, res) {
-  return res.json({ admin: { email: req.admin.email } });
+  return res.json({
+    admin: { email: req.admin.email, role: req.admin.role },
+  });
 }

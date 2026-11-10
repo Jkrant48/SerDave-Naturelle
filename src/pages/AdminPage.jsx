@@ -1,5 +1,5 @@
 // This route provides the admin login and management screens added for salon operations.
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiUrl } from "../lib/api.js";
 import "../admin.css";
@@ -109,6 +109,14 @@ function AdminPage() {
     serviceId: "",
     image: null,
   });
+  const categoryFormRef = useRef(null);
+  const categoryInputRef = useRef(null);
+  const serviceFormRef = useRef(null);
+  const serviceNameInputRef = useRef(null);
+  const availableSections = admin?.role === "Admin"
+    ? adminSections
+    : adminSections.filter((section) => section.id !== "employees");
+
   const loadDashboard = useCallback(async () => {
     const result = await apiRequest("/api/admin");
     setDashboard(result);
@@ -141,7 +149,7 @@ function AdminPage() {
         if (isMounted) setDashboard(result);
       })
       .catch((error) => {
-        if (error.message === "Admin login required.") {
+        if (error.message === "Staff login required.") {
           return apiRequest("/api/admin/setup-status").then((result) => {
             if (isMounted) setSetupRequired(result.setupRequired);
           });
@@ -159,12 +167,31 @@ function AdminPage() {
     };
   }, []);
 
-  const runAdminAction = async (action, successMessage) => {
+  useEffect(() => {
+    if (!categoryForm.id) return;
+    categoryFormRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+    categoryInputRef.current?.focus({ preventScroll: true });
+  }, [categoryForm.id]);
+
+  useEffect(() => {
+    if (!serviceForm.id) return;
+    serviceFormRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+    serviceNameInputRef.current?.focus({ preventScroll: true });
+  }, [serviceForm.id]);
+
+  const runAdminAction = async (action, successMessage, onSuccess) => {
     setIsWorking(true);
     setErrorMessage("");
     setNotice("");
     try {
       await action();
+      onSuccess?.();
       await loadDashboard();
       setNotice(successMessage);
       return true;
@@ -207,6 +234,7 @@ function AdminPage() {
         json: login,
       });
       setAdmin(result.admin);
+      setActiveSection("appointments");
       setLogin((current) => ({ ...current, password: "" }));
     }, "Signed in.");
   };
@@ -230,6 +258,7 @@ function AdminPage() {
         },
       });
       setAdmin(result.admin);
+      setActiveSection("appointments");
       setSetupRequired(false);
       setFirstAdminForm({ email: "", password: "", confirmPassword: "" });
       try {
@@ -266,7 +295,7 @@ function AdminPage() {
   const saveCategory = async (event) => {
     event.preventDefault();
     const editing = categoryForm.id !== null;
-    const saved = await runAdminAction(
+    await runAdminAction(
       () =>
         apiRequest(
           editing
@@ -278,13 +307,13 @@ function AdminPage() {
           },
         ),
       editing ? "Category updated." : "Category added.",
+      () => setCategoryForm({ id: null, name: "" }),
     );
-    if (saved) setCategoryForm({ id: null, name: "" });
   };
 
   const removeCategory = async (category) => {
     if (!window.confirm(`Delete the "${category.name}" category?`)) return;
-    const saved = await runAdminAction(
+    await runAdminAction(
       () =>
         apiRequest(`/api/admin/categories/${category.id}`, {
           method: "DELETE",
@@ -315,8 +344,8 @@ function AdminPage() {
           },
         ),
       editing ? "Service updated." : "Service added.",
+      () => setServiceForm({ id: null, ...emptyService }),
     );
-    if (saved) setServiceForm({ id: null, ...emptyService });
   };
 
   const createEmployee = async (event) => {
@@ -339,6 +368,40 @@ function AdminPage() {
     );
     if (saved) {
       setEmployeeForm({ email: "", password: "", confirmPassword: "" });
+    }
+  };
+
+  const removeAccount = async (account) => {
+    if (!window.confirm(`Delete the ${account.role.toLowerCase()} account for ${account.email}?`)) {
+      return;
+    }
+
+    setIsWorking(true);
+    setErrorMessage("");
+    setNotice("");
+    try {
+      await apiRequest(`/api/admin/accounts/${account.id}`, {
+        method: "DELETE",
+      });
+      if (account.id === admin.id) {
+        if (
+          account.role === "Admin" &&
+          dashboard.accounts.filter((currentAccount) => currentAccount.role === "Admin")
+            .length === 1
+        ) {
+          setSetupRequired(true);
+        }
+        setAdmin(null);
+        setDashboard(null);
+        setNotice("Your account was deleted. You have been signed out.");
+      } else {
+        await loadDashboard();
+        setNotice("Account deleted.");
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
+      setIsWorking(false);
     }
   };
 
@@ -424,11 +487,11 @@ function AdminPage() {
       <main className="admin-shell">
         <section className="admin-panel admin-login">
           <p className="admin-eyebrow">SerDave Naturelle</p>
-          <h1>{setupRequired ? "Create the first admin account" : "Admin sign in"}</h1>
+          <h1>{setupRequired ? "Create the first admin account" : "Staff sign in"}</h1>
           <p>
             {setupRequired
               ? "No admin account exists yet. Set up the first account to secure admin access."
-              : "Sign in with your admin account."}
+              : "Sign in with your admin or employee account."}
           </p>
           {errorMessage && <p className="admin-message error" role="alert">{errorMessage}</p>}
           {setupRequired ? (
@@ -582,7 +645,7 @@ function AdminPage() {
         <div className="admin-sidebar-menu" id="admin-sidebar-menu">
           <p className="admin-sidebar-label">Workspace</p>
           <nav className="admin-nav">
-            {adminSections.map((section) => (
+            {availableSections.map((section) => (
               <button
                 type="button"
                 key={section.id}
@@ -619,7 +682,7 @@ function AdminPage() {
         <div>
           <p className="admin-eyebrow">Management / {adminSections.find((section) => section.id === activeSection)?.label}</p>
           <h1>{adminSections.find((section) => section.id === activeSection)?.label}</h1>
-          <p>Signed in as {admin.email}</p>
+          <p>Signed in as {admin.email} · Role: <strong>{admin.role}</strong></p>
         </div>
       </header>
 
@@ -639,10 +702,9 @@ function AdminPage() {
       ) : (
         <>
           {activeSection === "employees" && <section className="admin-panel">
-            <h2>Employee accounts</h2>
+            <h2>Employee management</h2>
             <p>
-              Create an employee account and share its initial password securely.
-              Employee accounts do not have access to this admin dashboard.
+              Create and manage employee accounts. Admins can also delete other registered accounts.
             </p>
             <form onSubmit={createEmployee} className="admin-form">
               <div className="admin-form-grid">
@@ -695,19 +757,29 @@ function AdminPage() {
                 {isWorking ? "Creating account..." : "Create employee account"}
               </button>
             </form>
-            {dashboard.employees.length ? (
+            {dashboard.accounts?.length ? (
               <ul className="admin-list">
-                {dashboard.employees.map((employee) => (
-                  <li key={employee.id}>
-                    <span>{employee.email}</span>
-                    <small>
-                      Created {new Date(employee.createdAt).toLocaleDateString()}
-                    </small>
+                {dashboard.accounts.map((account) => (
+                  <li key={account.id}>
+                    <span>
+                      {account.email}
+                      <small>
+                        {account.role} · Created {new Date(account.createdAt).toLocaleDateString()}
+                      </small>
+                    </span>
+                    <button
+                      type="button"
+                      className="danger-button"
+                      disabled={isWorking}
+                      onClick={() => removeAccount(account)}
+                    >
+                      Delete account
+                    </button>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p>No employee accounts yet.</p>
+              <p>No registered accounts yet.</p>
             )}
           </section>}
 
@@ -789,10 +861,15 @@ function AdminPage() {
 
           {activeSection === "categories" && <section className="admin-panel">
             <h2>Categories</h2>
-            <form onSubmit={saveCategory} className="admin-inline-form">
+            <form
+              ref={categoryFormRef}
+              onSubmit={saveCategory}
+              className="admin-inline-form"
+            >
               <label>
                 {categoryForm.id ? "Edit category" : "New category"}
                 <input
+                  ref={categoryInputRef}
                   required
                   maxLength="100"
                   value={categoryForm.name}
@@ -826,14 +903,16 @@ function AdminPage() {
                     >
                       Edit
                     </button>
-                    <button
-                      type="button"
-                      className="danger-button"
-                      onClick={() => removeCategory(category)}
-                      disabled={isWorking}
-                    >
-                      Delete
-                    </button>
+                    {admin.role === "Admin" && (
+                      <button
+                        type="button"
+                        className="danger-button"
+                        onClick={() => removeCategory(category)}
+                        disabled={isWorking}
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </li>
               ))}
@@ -842,12 +921,17 @@ function AdminPage() {
 
           {activeSection === "services" && <section className="admin-panel">
             <h2>Services</h2>
-            <form onSubmit={saveService} className="admin-form admin-service-form">
+            <form
+              ref={serviceFormRef}
+              onSubmit={saveService}
+              className="admin-form admin-service-form"
+            >
               <h3>{serviceForm.id ? "Edit service" : "Add a service"}</h3>
               <div className="admin-form-grid">
                 <label>
                   Service name
                   <input
+                    ref={serviceNameInputRef}
                     required
                     maxLength="150"
                     value={serviceForm.serviceName}
@@ -978,7 +1062,7 @@ function AdminPage() {
                         >
                           Edit
                         </button>
-                        {service.active && (
+                        {admin.role === "Admin" && service.active && (
                           <button
                             type="button"
                             className="danger-button"

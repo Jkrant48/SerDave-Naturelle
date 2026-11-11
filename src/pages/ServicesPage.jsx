@@ -2,7 +2,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import haircareImage from "../assets/haircare.jpeg";
+import haircareImage from "../assets/haircare.jpg";
 import { apiUrl } from "../lib/api.js";
 
 const formatServicePrice = (service) => {

@@ -10,12 +10,12 @@ import "../portfolio.css";
 
 import MapComponent from "../components/MapComponent";
 import { useEffect, useState } from "react";
-import heroimg from "../assets/hero.png";
+import heroimg from "../assets/hero.webp";
 import serviceicon from "../assets/services-icon.png";
 import hairdresser from "../assets/hairdresser.jpg";
-import locsImage from "../assets/locs.png";
-import braidsImage from "../assets/braids.png";
-import haircareImage from "../assets/haircare.jpeg";
+import locsImage from "../assets/locs.jpg";
+import braidsImage from "../assets/braids.jpg";
+import haircareImage from "../assets/haircare.jpg";
 import { apiUrl } from "../lib/api.js";
 
 const HomePage = () => {

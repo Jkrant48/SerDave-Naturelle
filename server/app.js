@@ -1,7 +1,6 @@
 // App setup: shared middleware and API route registration live here.
 import express from "express";
 import cors from "cors";
-import process from "node:process";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import healthRoutes from "./routes/healthRoutes.js";
@@ -10,13 +9,14 @@ import adminRoutes from "./routes/adminRoutes.js";
 import portfolioRoutes from "./routes/portfolioRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
+import getClientOrigin from "./config/clientOrigin.js";
 
 const app = express();
 
 // Admin sessions are HTTP-only cookies, so the frontend origin must allow credentials.
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: getClientOrigin(),
     credentials: true,
   }),
 );

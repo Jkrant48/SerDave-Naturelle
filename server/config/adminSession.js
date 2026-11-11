@@ -3,6 +3,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { Buffer } from "node:buffer";
 import process from "node:process";
 import pool from "./database.js";
+import getClientOrigin from "./clientOrigin.js";
 
 export const ADMIN_COOKIE_NAME = "serdave_admin";
 export const ADMIN_SESSION_SECONDS = 8 * 60 * 60;
@@ -124,10 +125,7 @@ export function clearAdminCookie(res) {
 
 export function requireSameOrigin(req, res, next) {
   const origin = req.get("origin");
-  if (
-    origin &&
-    origin !== (process.env.CLIENT_URL || "http://localhost:5173")
-  ) {
+  if (origin && origin !== getClientOrigin()) {
     return res.status(403).json({ message: "Request origin is not allowed." });
   }
   return next();
@@ -137,10 +135,7 @@ export async function requireStaff(req, res, next) {
   try {
     if (req.method !== "GET") {
       const origin = req.get("origin");
-      if (
-        origin &&
-        origin !== (process.env.CLIENT_URL || "http://localhost:5173")
-      ) {
+      if (origin && origin !== getClientOrigin()) {
         return res.status(403).json({ message: "Request origin is not allowed." });
       }
     }

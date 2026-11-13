@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import haircareImage from "../assets/haircare.jpg";
 import { apiUrl } from "../lib/api.js";
+import { showBookingUnavailable } from "../lib/bookingUnavailable.js";
 
 const formatServicePrice = (service) => {
   const amount = new Intl.NumberFormat("en-GH", {
@@ -65,7 +66,11 @@ const ServicesPage = () => {
           <div className="hero-content">
             <div className="hero-content-text">
               <h1>Our Services</h1>
-              <Link to="/Booking" className="book-btn">
+              <Link
+                to="/Booking"
+                className="book-btn"
+                onClick={showBookingUnavailable}
+              >
                 Book an Appointment
               </Link>
             </div>

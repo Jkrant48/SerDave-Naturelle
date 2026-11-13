@@ -1,5 +1,6 @@
 //hero component (small changes needed)
 import { Link } from "react-router-dom";
+import { showBookingUnavailable } from "../lib/bookingUnavailable.js";
 
 const Hero = () => {
   return (
@@ -10,7 +11,11 @@ const Hero = () => {
           <p className="hero-subtitle">
             Experience luxury services and top‑notch products.
           </p>
-          <Link to="/booking" className="hero-btn">
+          <Link
+            to="/booking"
+            className="hero-btn"
+            onClick={showBookingUnavailable}
+          >
             Book Now
           </Link>
         </div>

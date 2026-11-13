@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logoNbg from "../assets/logoNnbg.png";
+import { showBookingUnavailable } from "../lib/bookingUnavailable.js";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,7 +35,13 @@ function Header() {
           <Link to="/services" onClick={() => setMenuOpen(false)}>
             Services
           </Link>
-          <Link to="/booking" onClick={() => setMenuOpen(false)}>
+          <Link
+            to="/booking"
+            onClick={(event) => {
+              showBookingUnavailable(event);
+              setMenuOpen(false);
+            }}
+          >
             Booking
           </Link>
         </nav>
